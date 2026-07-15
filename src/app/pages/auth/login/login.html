@@ -1,0 +1,82 @@
+<div class="auth-main">
+  <div class="auth-wrapper v3">
+    <div class="auth-form">
+      <div class="auth-header">
+        <a routerLink="/" class="auth-brand">
+          <img src="assets/images/logo-dark.svg" alt="Symphony" />
+          <span>Symphony</span>
+        </a>
+      </div>
+
+      <div class="auth-card card">
+        <form nz-form [formGroup]="loginForm" (ngSubmit)="login()">
+          <div class="card-body">
+            <div class="auth-card-header">
+              <h3>Iniciar sesión</h3>
+              <p class="auth-subtitle">Accede a tu panel de administración</p>
+            </div>
+
+            @if (errorMessage()) {
+              <div class="alert alert-danger mb-3" role="alert">
+                {{ errorMessage() }}
+              </div>
+            }
+
+            <div class="form-group mb-3">
+              <label class="form-label" for="email">Login</label>
+              <input
+                type="text"
+                class="form-control"
+                id="login"
+                placeholder="username"
+                formControlName="login"
+              />
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label" for="password">Contraseña</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                formControlName="passwd"
+                placeholder="Tu contraseña"
+              />
+            </div>
+
+            <div class="d-flex mt-1 justify-content-between align-items-center flex-wrap gap-2">
+              <div class="form-check">
+                <input
+                  class="form-check-input input-primary"
+                  type="checkbox"
+                  id="customCheckc1"
+                  checked
+                />
+                <label class="form-check-label text-muted" for="customCheckc1">
+                  Mantener sesión iniciada
+                </label>
+              </div>
+              <a href="javascript:" class="auth-link">¿Olvidaste tu contraseña?</a>
+            </div>
+
+            <div class="d-grid mt-4">
+              <button
+                type="submit"
+                class="btn btn-primary btn-login"
+                [disabled]="loginForm.invalid || isLoading()"
+              >
+                {{ isLoading() ? 'Ingresando...' : 'Ingresar' }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="auth-footer">
+        <p class="m-0">
+          Copyright © {{ date.getFullYear() }} Symphony
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

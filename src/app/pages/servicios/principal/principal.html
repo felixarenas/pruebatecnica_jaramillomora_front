@@ -1,0 +1,359 @@
+<app-card-content-page
+  [cardTitle]="'Servicios'"
+  [showHeader]="true"
+  [showContent]="true"
+  [cardClass]="'card-md'"
+  [headerClass]="'card-header'"
+  [blockClass]="'card-body'"
+  [padding]="16"
+>
+  <p class="servicios-intro">
+    Gestión de servicios del sistema. Desde aquí podrás consultar, crear y administrar los servicios ofrecidos.
+  </p>
+
+  @if (errorMessage()) {
+    <div class="servicios-alert alert alert-danger" role="alert">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <div class="servicios-actions">
+    <button
+      nz-button
+      nzType="primary"
+      type="button"
+      class="servicios-add-btn"
+      (click)="openCreateModal()"
+    >
+      <span nz-icon nzType="plus" nzTheme="outline"></span>
+      Agregar servicio
+    </button>
+  </div>
+
+  <div class="servicios-table-wrapper">
+    <nz-table
+      #serviciosTable
+      [nzData]="servicios()"
+      [nzLoading]="isLoading()"
+      [nzShowPagination]="servicios().length > 10"
+      nzTableLayout="fixed"
+      [nzScroll]="{ x: '960px' }"
+    >
+      <thead>
+        <tr>
+          <th nzWidth="70px">ID</th>
+          <th nzWidth="110px">Cliente</th>
+          <th nzWidth="120px">Tipo servicio</th>
+          <th nzWidth="120px">Inicio</th>
+          <th nzWidth="140px">Última facturación</th>
+          <th nzWidth="130px">Último pago</th>
+          <th nzWidth="100px">Estado</th>
+          <th nzWidth="140px">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (servicio of serviciosTable.data; track servicio.id) {
+          <tr>
+            <td>{{ servicio.id }}</td>
+            <td>{{ servicio.nom_cliente }}</td>
+            <td>{{ servicio.tipo_servicio }}</td>
+            <td>{{ servicio.fecha_inicio | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ servicio.ultima_facturacion | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ servicio.ultimo_pago | currency: 'COP':'symbol-narrow':'1.0-0' }}</td>
+            <td>
+              <nz-tag [nzColor]="servicio.estado ? 'success' : 'default'">
+                {{ servicio.estado ? 'Activo' : 'Inactivo' }}
+              </nz-tag>
+            </td>
+            <td>
+              <div class="servicios-row-actions">
+                <button
+                  nz-button
+                  nzType="default"
+                  nzSize="small"
+                  type="button"
+                  (click)="openEditModal(servicio.id)"
+                >
+                  <span nz-icon nzType="edit" nzTheme="outline"></span>
+                  Actualizar
+                </button>
+                <button
+                  nz-button
+                  nzType="default"
+                  nzDanger
+                  nzSize="small"
+                  type="button"
+                  (click)="confirmDeleteServicio(servicio)"
+                >
+                  <span nz-icon nzType="delete" nzTheme="outline"></span>
+                  Eliminar
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </nz-table>
+  </div>
+</app-card-content-page>
+
+<nz-modal
+  [nzVisible]="isModalVisible()"
+  nzTitle="Nuevo servicio"
+  [nzMaskClosable]="false"
+  [nzClosable]="!isSaving()"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="closeCreateModal()"
+  nzClassName="servicios-create-modal"
+  [nzWidth]="560"
+  [nzMaskStyle]="{ 'background-color': 'rgba(0, 0, 0, 0.35)' }"
+>
+  <ng-container *nzModalContent>
+    @if (modalErrorMessage()) {
+      <div class="servicios-modal-alert alert alert-danger" role="alert">
+        {{ modalErrorMessage() }}
+      </div>
+    }
+
+    <form nz-form [formGroup]="servicioForm" class="servicios-form" (ngSubmit)="guardarServicio()">
+      <input type="hidden" formControlName="id_cliente" />
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="24" nzRequired>Cliente</nz-form-label>
+        <nz-form-control [nzSpan]="24">
+          <div class="servicios-cliente-search">
+            <input
+              nz-input
+              class="servicios-cliente-search-input"
+              inputmode="numeric"
+              placeholder="Buscar por cédula"
+              [value]="cedulaBusqueda()"
+              (input)="onCedulaInput($event)"
+              (keyup.enter)="buscarCliente(); $event.preventDefault()"
+            />
+            <button
+              nz-button
+              nzType="default"
+              type="button"
+              class="servicios-cliente-search-btn"
+              [nzLoading]="isSearchingCliente()"
+              (click)="buscarCliente()"
+            >
+              <span nz-icon nzType="search" nzTheme="outline"></span>
+              Buscar
+            </button>
+          </div>
+
+          @if (clienteSearchError()) {
+            <div class="servicios-cliente-search-error">{{ clienteSearchError() }}</div>
+          }
+
+          @if (clientesBusqueda().length) {
+            <div class="servicios-cliente-results">
+              @for (cliente of clientesBusqueda(); track cliente.id) {
+                <button
+                  type="button"
+                  class="servicios-cliente-result-item"
+                  (click)="seleccionarCliente(cliente)"
+                >
+                  <span class="servicios-cliente-result-cedula">{{ cliente.identificacion }}</span>
+                  <span class="servicios-cliente-result-nombre">
+                    {{ cliente.nombres }} {{ cliente.apellidos }}
+                  </span>
+                </button>
+              }
+            </div>
+          }
+
+          <input
+            nz-input
+            class="servicios-cliente-selected"
+            formControlName="cliente_nombre"
+            placeholder="Seleccione un cliente de la búsqueda"
+            readonly
+          />
+          @if (servicioForm.controls.id_cliente.touched && servicioForm.controls.id_cliente.invalid) {
+            <div class="servicios-field-error">Seleccione un cliente de la búsqueda</div>
+          }
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="24" nzRequired>Tipo de servicio</nz-form-label>
+        <nz-form-control
+          [nzSpan]="24"
+          nzErrorTip="Seleccione un tipo de servicio"
+        >
+          <nz-select
+            formControlName="id_tipo_servicio"
+            nzPlaceHolder="Seleccione el tipo"
+            nzShowSearch
+            nzAllowClear
+          >
+            @for (tipo of tiposServicio(); track tipo.id) {
+              <nz-option [nzValue]="tipo.id" [nzLabel]="tipo.nombre"></nz-option>
+            }
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="24" nzRequired>Fecha de inicio</nz-form-label>
+        <nz-form-control
+          [nzSpan]="24"
+          nzErrorTip="Use el formato yyyy-mm-dd"
+        >
+          <nz-date-picker
+            class="servicios-date-picker"
+            formControlName="fecha_inicio"
+            nzFormat="yyyy-MM-dd"
+            nzPlaceHolder="yyyy-mm-dd"
+            [nzInputReadOnly]="false"
+          ></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="24" nzRequired>Última facturación</nz-form-label>
+        <nz-form-control
+          [nzSpan]="24"
+          nzErrorTip="Use el formato yyyy-mm-dd"
+        >
+          <nz-date-picker
+            class="servicios-date-picker"
+            formControlName="ultima_facturacion"
+            nzFormat="yyyy-MM-dd"
+            nzPlaceHolder="yyyy-mm-dd"
+            [nzInputReadOnly]="false"
+          ></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="24" nzRequired>Último pago</nz-form-label>
+        <nz-form-control
+          [nzSpan]="24"
+          nzErrorTip="Ingrese solo números"
+        >
+          <input
+            nz-input
+            formControlName="ultimo_pago"
+            inputmode="numeric"
+            placeholder="0"
+            (input)="onUltimoPagoInput($event)"
+          />
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<ng-template #modalFooter>
+  <button
+    nz-button
+    type="button"
+    [disabled]="isSaving()"
+    (click)="closeCreateModal()"
+  >
+    Cancelar
+  </button>
+  <button
+    nz-button
+    nzType="primary"
+    type="button"
+    [disabled]="servicioForm.invalid || isSaving()"
+    [nzLoading]="isSaving()"
+    (click)="guardarServicio()"
+  >
+    Guardar
+  </button>
+</ng-template>
+
+<nz-modal
+  [nzVisible]="isEditModalVisible()"
+  nzTitle="Actualizar servicio"
+  [nzMaskClosable]="false"
+  [nzClosable]="!isSaving()"
+  [nzFooter]="editModalFooter"
+  (nzOnCancel)="closeEditModal()"
+  nzClassName="servicios-edit-modal"
+  [nzWidth]="560"
+  [nzMaskStyle]="{ 'background-color': 'rgba(0, 0, 0, 0.35)' }"
+>
+  <ng-container *nzModalContent>
+    @if (editModalErrorMessage()) {
+      <div class="servicios-modal-alert alert alert-danger" role="alert">
+        {{ editModalErrorMessage() }}
+      </div>
+    }
+
+    @if (isLoadingEdit()) {
+      <div class="servicios-edit-loading">Cargando datos del servicio...</div>
+    } @else {
+      <form
+        nz-form
+        [formGroup]="servicioEditForm"
+        class="servicios-form"
+        (ngSubmit)="guardarServicioEdit()"
+      >
+        <input type="hidden" formControlName="id" />
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Tipo de servicio</nz-form-label>
+          <nz-form-control
+            [nzSpan]="24"
+            nzErrorTip="Seleccione un tipo de servicio"
+          >
+            <nz-select
+              formControlName="id_tipo_servicio"
+              nzPlaceHolder="Seleccione el tipo"
+              nzShowSearch
+              nzAllowClear
+            >
+              @for (tipo of tiposServicio(); track tipo.id) {
+                <nz-option [nzValue]="tipo.id" [nzLabel]="tipo.nombre"></nz-option>
+              }
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Fecha de inicio</nz-form-label>
+          <nz-form-control
+            [nzSpan]="24"
+            nzErrorTip="Use el formato yyyy-mm-dd"
+          >
+            <nz-date-picker
+              class="servicios-date-picker"
+              formControlName="fecha_inicio"
+              nzFormat="yyyy-MM-dd"
+              nzPlaceHolder="yyyy-mm-dd"
+              [nzInputReadOnly]="false"
+            ></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    }
+  </ng-container>
+</nz-modal>
+
+<ng-template #editModalFooter>
+  <button
+    nz-button
+    type="button"
+    [disabled]="isSaving()"
+    (click)="closeEditModal()"
+  >
+    Cancelar
+  </button>
+  <button
+    nz-button
+    nzType="primary"
+    type="button"
+    [disabled]="servicioEditForm.invalid || isSaving() || isLoadingEdit()"
+    [nzLoading]="isSaving()"
+    (click)="guardarServicioEdit()"
+  >
+    Guardar
+  </button>
+</ng-template>

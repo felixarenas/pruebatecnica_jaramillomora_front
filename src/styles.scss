@@ -1,0 +1,13 @@
+// Symphony — Punto de entrada de estilos globales
+@import 'app/scss/fonts/inter/inter.css';
+@import 'bootstrap/scss/functions';
+@import 'app/scss/settings/bootstrap-variables';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/variables-dark';
+@import 'app/scss/bootstrap/bootstrap';
+@import 'bootstrap-icons/font/bootstrap-icons';
+
+@import 'app/scss/themes/preset-style';
+@import 'app/scss/themes/general';
+@import 'app/scss/themes/components/components';
+@import 'app/scss/themes/symphony-global';

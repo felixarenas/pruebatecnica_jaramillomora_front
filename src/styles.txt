@@ -1,0 +1,27 @@
+/* You can add global app to this file, and also import other style files */
+@import './../node_modules/bootstrap/scss/functions';
+@import './../node_modules/bootstrap/scss/variables';
+@import './../node_modules/bootstrap/scss/variables-dark';
+
+@import './app/scss/settings/color-variables';
+@import './app/scss/settings/bootstrap-variables';
+@import './app/scss/settings/theme-variables';
+
+
+// bootstrap import
+@import './app/scss/bootstrap/bootstrap.scss';
+
+// main framework
+@import './app/scss/themes/generic.scss';
+@import './app/scss/themes/general.scss';
+
+@import './app/scss/themes/components/components.scss';
+
+// theme
+@import './app/scss/themes/layouts/menu/sidebar.scss';
+@import './app/scss/themes/layouts/navbar/navbar.scss';
+@import './app/scss/themes/layouts/pc-common.scss';
+@import './app/scss/themes/layouts/breadcrumb/breadcrumb.scss';
+@import './app/scss/themes/layouts/footer/footer.scss';
+
+@import './app/scss/themes/preset-style.scss';

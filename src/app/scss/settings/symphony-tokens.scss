@@ -1,0 +1,47 @@
+// Symphony — Design tokens (naranja suave + blanco predominante)
+
+// Paleta principal
+$symphony-orange: #f07830;
+$symphony-orange-hover: #d9651f;
+$symphony-orange-light: #fff4ec;
+$symphony-orange-soft: #ffe8d6;
+$symphony-orange-muted: #ffb380;
+$symphony-orange-subtle: #fff9f5;
+
+// Superficies
+$symphony-surface: #ffffff;
+$symphony-surface-muted: #fafafa;
+$symphony-surface-warm: #fffaf7;
+
+// Texto
+$symphony-text: #3d3d3d;
+$symphony-text-secondary: #6b6b6b;
+$symphony-text-muted: #9a9a9a;
+
+// Bordes y sombras
+$symphony-border: #f0e6de;
+$symphony-border-focus: rgba($symphony-orange, 0.45);
+$symphony-shadow-sm: 0 1px 3px rgba($symphony-orange, 0.06);
+$symphony-shadow-md: 0 4px 16px rgba($symphony-orange, 0.08);
+$symphony-shadow-lg: 0 8px 32px rgba($symphony-orange, 0.1);
+
+// Radios (contemporáneos, redondeados)
+$symphony-radius-sm: 8px;
+$symphony-radius: 10px;
+$symphony-radius-lg: 14px;
+$symphony-radius-xl: 18px;
+$symphony-radius-pill: 50rem;
+
+// Tipografía
+$symphony-font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+$symphony-font-size-base: 0.9375rem; // 15px — legible en campo y oficina
+$symphony-line-height: 1.55;
+
+// Layout
+$symphony-header-height: 60px;
+$symphony-sidebar-width: 260px;
+$symphony-sidebar-collapsed-width: 72px;
+$symphony-content-padding: 24px;
+
+// Transiciones
+$symphony-transition: 0.2s ease-in-out;

@@ -1,0 +1,323 @@
+@use '../../../scss/settings/symphony-tokens' as *;
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.symphony-layout {
+  min-height: 100vh;
+  background: $symphony-surface-muted;
+}
+
+// ─── Sidebar ────────────────────────────────────────────────────────────────
+.symphony-sider {
+  background: $symphony-surface !important;
+  border-right: 1px solid $symphony-border;
+  box-shadow: $symphony-shadow-sm;
+  overflow: auto;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 100;
+
+  ::ng-deep .ant-layout-sider-children {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.symphony-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid $symphony-border;
+  min-height: 64px;
+
+  img {
+    height: 32px;
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .logo-icon {
+    height: 28px;
+    margin: 0 auto;
+  }
+
+  span {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $symphony-text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &.collapsed {
+    justify-content: center;
+    padding: 20px 12px 16px;
+  }
+}
+
+.symphony-menu {
+  flex: 1;
+  border-right: none !important;
+  padding: 8px;
+  background: transparent !important;
+
+  ::ng-deep {
+    .ant-menu-item,
+    .ant-menu-submenu-title {
+      border-radius: $symphony-radius;
+      margin: 2px 0;
+      height: 44px;
+      line-height: 44px;
+      color: $symphony-text;
+      transition: all $symphony-transition;
+
+      &:hover {
+        color: $symphony-orange !important;
+        background: $symphony-orange-light !important;
+      }
+    }
+
+    .ant-menu-item-selected {
+      background: $symphony-orange-light !important;
+      color: $symphony-orange !important;
+      font-weight: 600;
+
+      &::after {
+        display: none;
+      }
+    }
+
+    .ant-menu-submenu-selected > .ant-menu-submenu-title {
+      color: $symphony-orange !important;
+    }
+
+    .ant-menu-sub {
+      background: transparent !important;
+    }
+
+    .ant-menu-item .anticon,
+    .ant-menu-submenu-title .anticon {
+      font-size: 16px;
+    }
+  }
+}
+
+// ─── Header ─────────────────────────────────────────────────────────────────
+.symphony-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: $symphony-header-height;
+  background: $symphony-surface !important;
+  border-bottom: 1px solid $symphony-border;
+  box-shadow: $symphony-shadow-sm;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid $symphony-border;
+  border-radius: $symphony-radius;
+  background: $symphony-surface;
+  color: $symphony-text;
+  cursor: pointer;
+  transition: all $symphony-transition;
+
+  &:hover {
+    color: $symphony-orange;
+    border-color: $symphony-orange-muted;
+    background: $symphony-orange-light;
+  }
+}
+
+.header-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: $symphony-text;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-icon {
+  font-size: 18px;
+  color: $symphony-text-secondary;
+  cursor: pointer;
+  transition: color $symphony-transition;
+
+  &:hover {
+    color: $symphony-orange;
+  }
+}
+
+.user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: $symphony-orange-light;
+  color: $symphony-orange;
+  border: 1px solid $symphony-orange-soft;
+  cursor: pointer;
+  transition: all $symphony-transition;
+
+  &:hover {
+    background: $symphony-orange-soft;
+  }
+}
+
+::ng-deep .symphony-user-dropdown {
+  .ant-dropdown-menu {
+    padding: 0;
+    border-radius: $symphony-radius-lg;
+    border: 1px solid $symphony-orange-muted;
+    box-shadow: $symphony-shadow-md;
+    background: $symphony-surface !important;
+    overflow: hidden;
+  }
+}
+
+.user-dropdown-panel {
+  min-width: 220px;
+  max-width: 280px;
+  padding: 12px;
+  font-family: $symphony-font-family;
+  font-size: $symphony-font-size-base;
+  line-height: $symphony-line-height;
+  background: $symphony-surface;
+}
+
+.user-dropdown-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: $symphony-radius-sm;
+  background: $symphony-surface-muted;
+
+  & + .user-dropdown-field {
+    margin-top: 8px;
+  }
+}
+
+.user-dropdown-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: $symphony-text-muted;
+  line-height: 1.4;
+}
+
+.user-dropdown-value {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: $symphony-text-secondary;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
+.user-dropdown-logout {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 7px 12px;
+  border: 1px solid $symphony-border;
+  border-radius: $symphony-radius;
+  background: $symphony-surface;
+  color: $symphony-text-secondary;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: all $symphony-transition;
+
+  &:hover {
+    color: $symphony-orange-hover;
+    border-color: $symphony-orange-muted;
+    background: $symphony-orange-light;
+  }
+}
+
+// ─── Content ────────────────────────────────────────────────────────────────
+.symphony-main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.symphony-content {
+  flex: 1;
+  padding: $symphony-content-padding;
+  background: $symphony-surface-muted;
+}
+
+.inner-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+// ─── Footer ─────────────────────────────────────────────────────────────────
+.symphony-footer {
+  text-align: center;
+  padding: 12px 24px;
+  background: $symphony-surface !important;
+  border-top: 1px solid $symphony-border;
+  color: $symphony-text-muted;
+  font-size: 0.8125rem;
+}
+
+// ─── Responsive ─────────────────────────────────────────────────────────────
+@media (max-width: 991.98px) {
+  .symphony-content {
+    padding: 16px;
+  }
+
+  .symphony-header {
+    padding: 0 16px;
+  }
+
+  .header-title {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .symphony-content {
+    padding: 12px;
+  }
+
+  .header-title {
+    display: none;
+  }
+
+  .symphony-footer {
+    padding: 10px 12px;
+    font-size: 0.75rem;
+  }
+}

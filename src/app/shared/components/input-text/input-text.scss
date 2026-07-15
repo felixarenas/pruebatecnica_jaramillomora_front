@@ -1,0 +1,47 @@
+@use '../../../scss/settings/symphony-tokens' as *;
+
+.input-container {
+  width: 100%;
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: $symphony-text;
+  }
+
+  .field-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    nz-icon {
+      position: absolute;
+      left: 12px;
+      color: $symphony-text-muted;
+      z-index: 1;
+    }
+
+    input[nz-input] {
+      width: 100%;
+      border-radius: $symphony-radius;
+      border-color: $symphony-border;
+      padding: 8px 12px;
+      transition: border-color $symphony-transition, box-shadow $symphony-transition;
+
+      &:hover {
+        border-color: $symphony-orange-muted;
+      }
+
+      &:focus {
+        border-color: $symphony-orange;
+        box-shadow: 0 0 0 2px rgba($symphony-orange, 0.12);
+      }
+    }
+
+    nz-icon + input[nz-input] {
+      padding-left: 36px;
+    }
+  }
+}

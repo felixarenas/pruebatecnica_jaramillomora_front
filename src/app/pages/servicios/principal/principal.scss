@@ -1,0 +1,138 @@
+@use '../../../scss/settings/symphony-tokens' as *;
+
+.servicios-intro {
+  margin: 0 0 1rem;
+  color: var(--symphony-text-secondary, rgba(0, 0, 0, 0.65));
+}
+
+.servicios-alert,
+.servicios-modal-alert {
+  margin-bottom: 1rem;
+}
+
+.servicios-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.servicios-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: $symphony-radius;
+  box-shadow: 0 4px 12px rgba($symphony-orange, 0.2);
+}
+
+.servicios-table-wrapper {
+  margin-top: 0.5rem;
+}
+
+.servicios-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.servicios-edit-loading {
+  padding: 1.5rem 0;
+  text-align: center;
+  color: var(--symphony-text-secondary, rgba(0, 0, 0, 0.65));
+}
+
+.servicios-form {
+  nz-form-item {
+    margin-bottom: 0.85rem;
+  }
+}
+
+.servicios-date-picker,
+nz-select {
+  width: 100%;
+}
+
+.servicios-date-picker {
+  ::ng-deep .ant-picker {
+    width: 100%;
+    border-radius: $symphony-radius;
+    border-color: $symphony-border;
+
+    &:hover {
+      border-color: $symphony-orange-muted;
+    }
+
+    &.ant-picker-focused {
+      border-color: $symphony-orange;
+      box-shadow: 0 0 0 2px rgba($symphony-orange, 0.12);
+    }
+  }
+}
+
+.servicios-cliente-search {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.servicios-cliente-search-input {
+  flex: 1;
+}
+
+.servicios-cliente-search-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  border-radius: $symphony-radius;
+}
+
+.servicios-cliente-search-error,
+.servicios-field-error {
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  color: #ff4d4f;
+}
+
+.servicios-cliente-results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.servicios-cliente-result-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid $symphony-border;
+  border-radius: $symphony-radius;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+
+  &:hover {
+    border-color: $symphony-orange-muted;
+    background: rgba($symphony-orange, 0.04);
+  }
+}
+
+.servicios-cliente-result-cedula {
+  font-size: 0.8rem;
+  color: var(--symphony-text-secondary, rgba(0, 0, 0, 0.55));
+}
+
+.servicios-cliente-result-nombre {
+  font-weight: 500;
+  color: var(--symphony-text-primary, rgba(0, 0, 0, 0.88));
+}
+
+.servicios-cliente-selected {
+  margin-top: 0.25rem;
+  background: rgba(0, 0, 0, 0.02);
+}

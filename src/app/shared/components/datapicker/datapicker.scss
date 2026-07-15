@@ -1,0 +1,26 @@
+@use '../../../scss/settings/symphony-tokens' as *;
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+nz-date-picker {
+  width: 100%;
+  margin: 0;
+
+  ::ng-deep .ant-picker {
+    width: 100%;
+    border-radius: $symphony-radius;
+    border-color: $symphony-border;
+
+    &:hover {
+      border-color: $symphony-orange-muted;
+    }
+
+    &.ant-picker-focused {
+      border-color: $symphony-orange;
+      box-shadow: 0 0 0 2px rgba($symphony-orange, 0.12);
+    }
+  }
+}

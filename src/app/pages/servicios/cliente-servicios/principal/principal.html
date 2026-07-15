@@ -1,0 +1,145 @@
+<app-card-content-page
+  [cardTitle]="'Servicios por cliente'"
+  [showHeader]="true"
+  [showContent]="true"
+  [cardClass]="'card-md'"
+  [headerClass]="'card-header'"
+  [blockClass]="'card-body'"
+  [padding]="16"
+>
+  <p class="cliente-servicios-intro">
+    Consulte los servicios asociados a un cliente ingresando su tipo y número de identificación.
+  </p>
+
+  <form
+    nz-form
+    [formGroup]="busquedaForm"
+    class="cliente-servicios-form"
+    (ngSubmit)="buscar()"
+  >
+    <div class="cliente-servicios-form-grid">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="24" nzRequired>Tipo de identificación</nz-form-label>
+        <nz-form-control
+          [nzSpan]="24"
+          nzErrorTip="Seleccione un tipo de identificación"
+        >
+          <nz-select
+            formControlName="id_tipo_identificacion"
+            nzPlaceHolder="Seleccione el tipo"
+            nzShowSearch
+            nzAllowClear
+          >
+            @for (tipo of tiposIdentificacion(); track tipo.id) {
+              <nz-option
+                [nzValue]="tipo.id"
+                [nzLabel]="tipo.abr + ' — ' + tipo.name"
+              ></nz-option>
+            }
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="24" nzRequired>Número de identificación</nz-form-label>
+        <nz-form-control
+          [nzSpan]="24"
+          nzErrorTip="Ingrese solo números"
+        >
+          <input
+            nz-input
+            formControlName="numero_identificacion"
+            inputmode="numeric"
+            placeholder="Número de identificación"
+            (input)="onNumeroIdentificacionInput($event)"
+            (keyup.enter)="buscar(); $event.preventDefault()"
+          />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div class="cliente-servicios-actions">
+      <button
+        nz-button
+        nzType="primary"
+        type="submit"
+        class="cliente-servicios-search-btn"
+        [disabled]="busquedaForm.invalid"
+        [nzLoading]="isSearching()"
+      >
+        <span nz-icon nzType="search" nzTheme="outline"></span>
+        Buscar
+      </button>
+    </div>
+  </form>
+
+  @if (errorMessage()) {
+    <div class="cliente-servicios-alert alert alert-danger" role="alert">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (resultado(); as data) {
+    <section class="cliente-servicios-resultado">
+      <h3 class="cliente-servicios-resultado-title">Datos del cliente</h3>
+
+      <dl class="cliente-servicios-cliente-resumen">
+        <div class="cliente-servicios-resumen-item">
+          <dt>ID cliente</dt>
+          <dd>{{ data.id_cliente }}</dd>
+        </div>
+        <div class="cliente-servicios-resumen-item">
+          <dt>Nombre</dt>
+          <dd>{{ data.nom_cliente }}</dd>
+        </div>
+        <div class="cliente-servicios-resumen-item">
+          <dt>Tipo identificación</dt>
+          <dd>{{ data.tipo_identificacion }}</dd>
+        </div>
+        <div class="cliente-servicios-resumen-item">
+          <dt>Número identificación</dt>
+          <dd>{{ data.numero_identificacion }}</dd>
+        </div>
+      </dl>
+
+      <h3 class="cliente-servicios-resultado-title">Servicios</h3>
+
+      <div class="cliente-servicios-table-wrapper">
+        <nz-table
+          #serviciosTable
+          [nzData]="data.servicios"
+          [nzShowPagination]="data.servicios.length > 10"
+          nzTableLayout="fixed"
+          [nzScroll]="{ x: '860px' }"
+        >
+          <thead>
+            <tr>
+              <th nzWidth="90px">ID servicio</th>
+              <th nzWidth="180px">Servicio</th>
+              <th nzWidth="120px">Inicio</th>
+              <th nzWidth="140px">Última facturación</th>
+              <th nzWidth="130px">Último pago</th>
+              <th nzWidth="110px">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (servicio of serviciosTable.data; track servicio.id_servicio) {
+              <tr>
+                <td>{{ servicio.id_servicio }}</td>
+                <td>{{ servicio.nom_servicio }}</td>
+                <td>{{ servicio.fecha_inicio | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ servicio.ultima_facturacion | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ servicio.ultimo_pago | currency: 'COP':'symbol-narrow':'1.0-0' }}</td>
+                <td>
+                  <nz-tag [nzColor]="servicio.estado_servicio ? 'success' : 'default'">
+                    {{ servicio.estado_servicio ? 'Activo' : 'Inactivo' }}
+                  </nz-tag>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </nz-table>
+      </div>
+    </section>
+  }
+</app-card-content-page>

@@ -1,0 +1,8 @@
+<div class="input-container">
+    @if (label) { <label [attr.for]="label">{{ label }}</label> }
+    <div class="field-wrapper">
+        @if (icon) { <nz-icon [nzType]="icon" nzTheme="outline"></nz-icon> }
+        <input [id]="label" nz-input [type]="type" [value]="value" [placeholder]="placeholder" [disabled]="isDisabled"
+            (input)="onInputChange($event)" (blur)="onTouched()" />
+    </div>
+</div>

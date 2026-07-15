@@ -1,0 +1,204 @@
+// Symphony — Estilos globales heredados por toda la aplicación
+@use '../settings/symphony-tokens' as *;
+
+// ─── Base ───────────────────────────────────────────────────────────────────
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: $symphony-font-family;
+  font-size: $symphony-font-size-base;
+  line-height: $symphony-line-height;
+  color: $symphony-text;
+  background-color: $symphony-surface-muted;
+}
+
+// ─── ng-zorro: controles redondeados y coherentes ───────────────────────────
+.ant-btn {
+  border-radius: $symphony-radius;
+  font-weight: 500;
+  transition: all $symphony-transition;
+  box-shadow: none;
+
+  &-primary:not(:disabled):hover {
+    background-color: $symphony-orange-hover;
+    border-color: $symphony-orange-hover;
+  }
+}
+
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-input-number,
+.ant-picker,
+.ant-select-selector,
+.ant-input-textarea textarea {
+  border-radius: $symphony-radius !important;
+  border-color: $symphony-border;
+  transition: border-color $symphony-transition, box-shadow $symphony-transition;
+
+  &:hover {
+    border-color: $symphony-orange-muted;
+  }
+
+  &:focus,
+  &-focused {
+    border-color: $symphony-orange;
+    box-shadow: 0 0 0 2px rgba($symphony-orange, 0.12);
+  }
+}
+
+.ant-select-dropdown,
+.ant-picker-dropdown {
+  border-radius: $symphony-radius-lg;
+  box-shadow: $symphony-shadow-md;
+}
+
+.ant-table {
+  border-radius: $symphony-radius-lg;
+  overflow: hidden;
+
+  .ant-table-thead > tr > th {
+    background: $symphony-orange-subtle;
+    font-weight: 600;
+    color: $symphony-text;
+    border-bottom: 1px solid $symphony-border;
+  }
+
+  .ant-table-tbody > tr:hover > td {
+    background: $symphony-orange-light;
+  }
+}
+
+.ant-modal-content,
+.ant-drawer-content,
+.ant-popover-inner,
+.ant-dropdown-menu,
+.ant-notification-notice,
+.ant-message-notice-content {
+  border-radius: $symphony-radius-lg !important;
+  box-shadow: $symphony-shadow-lg;
+}
+
+.ant-modal-header {
+  border-radius: $symphony-radius-lg $symphony-radius-lg 0 0;
+  border-bottom: 1px solid $symphony-border;
+}
+
+.ant-card {
+  border-radius: $symphony-radius-lg;
+  border: 1px solid $symphony-border;
+  box-shadow: $symphony-shadow-sm;
+}
+
+.ant-menu {
+  border-radius: $symphony-radius;
+}
+
+.ant-form-item-label > label {
+  font-weight: 500;
+  color: $symphony-text;
+}
+
+.ant-layout-sider {
+  border-right: 1px solid $symphony-border;
+}
+
+.ant-layout-header {
+  border-bottom: 1px solid $symphony-border;
+  box-shadow: $symphony-shadow-sm;
+}
+
+.ant-layout-footer {
+  background: $symphony-surface;
+  border-top: 1px solid $symphony-border;
+  color: $symphony-text-secondary;
+}
+
+// ─── Bootstrap: herencia global ───────────────────────────────────────────
+.btn {
+  border-radius: $symphony-radius;
+  font-weight: 500;
+  transition: all $symphony-transition;
+
+  &-primary {
+    background-color: $symphony-orange;
+    border-color: $symphony-orange;
+
+    &:hover,
+    &:focus {
+      background-color: $symphony-orange-hover;
+      border-color: $symphony-orange-hover;
+    }
+  }
+}
+
+.form-control,
+.form-select {
+  border-radius: $symphony-radius;
+  border-color: $symphony-border;
+  transition: border-color $symphony-transition, box-shadow $symphony-transition;
+
+  &:hover {
+    border-color: $symphony-orange-muted;
+  }
+
+  &:focus {
+    border-color: $symphony-orange;
+    box-shadow: 0 0 0 2px rgba($symphony-orange, 0.12);
+  }
+}
+
+.card {
+  border-radius: $symphony-radius-lg;
+  border-color: $symphony-border;
+  box-shadow: $symphony-shadow-sm;
+  overflow: hidden;
+}
+
+.table {
+  border-radius: $symphony-radius-lg;
+  overflow: hidden;
+
+  thead th {
+    background-color: $symphony-orange-subtle;
+    border-color: $symphony-border;
+  }
+}
+
+.modal-content,
+.dropdown-menu,
+.popover,
+.toast {
+  border-radius: $symphony-radius-lg;
+}
+
+// ─── Utilidades Symphony ────────────────────────────────────────────────────
+.symphony-surface {
+  background: $symphony-surface;
+  border-radius: $symphony-radius-lg;
+  border: 1px solid $symphony-border;
+}
+
+.symphony-accent-bg {
+  background: linear-gradient(135deg, $symphony-orange-light 0%, $symphony-surface 100%);
+}
+
+// ─── Responsive ─────────────────────────────────────────────────────────────
+@media (max-width: 767.98px) {
+  body {
+    font-size: 0.875rem;
+  }
+
+  .ant-table {
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .card-body {
+    padding: 16px !important;
+  }
+}

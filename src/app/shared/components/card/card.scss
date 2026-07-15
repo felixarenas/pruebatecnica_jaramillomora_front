@@ -1,0 +1,99 @@
+@use '../../../scss/settings/symphony-tokens' as *;
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0 $symphony-content-padding;
+
+  .card {
+    width: 100%;
+    max-width: 100%;
+    border-radius: $symphony-radius-lg;
+    border: 1px solid $symphony-border;
+    box-shadow: $symphony-shadow-sm;
+    background: $symphony-surface;
+    transition: box-shadow $symphony-transition;
+
+    &:hover {
+      box-shadow: $symphony-shadow-md;
+    }
+
+    .card-header {
+      background: $symphony-orange-subtle;
+      border-bottom: 1px solid $symphony-border;
+      border-radius: $symphony-radius-lg $symphony-radius-lg 0 0;
+      padding: 16px 20px;
+
+      h5 {
+        color: $symphony-text;
+        font-weight: 600;
+        font-size: 1rem;
+        margin: 0;
+      }
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+  }
+}
+
+// Anchos responsivos
+.card-sm {
+  max-width: 480px;
+}
+
+.card-md {
+  max-width: 720px;
+}
+
+.card-lg {
+  max-width: 960px;
+}
+
+.card-xl {
+  max-width: 1140px;
+}
+
+.card-full {
+  max-width: 100%;
+}
+
+.card-h-full {
+  min-height: 100%;
+}
+
+.card-screen-height {
+  min-height: 100vh;
+}
+
+@media (max-width: 991.98px) {
+  .card-container {
+    padding: 0 16px;
+  }
+
+  .card-sm,
+  .card-md,
+  .card-lg,
+  .card-xl {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .card-container {
+    padding: 0 12px;
+
+    .card {
+      .card-header {
+        padding: 12px 16px;
+      }
+
+      .card-body {
+        padding: 16px;
+      }
+    }
+  }
+}
