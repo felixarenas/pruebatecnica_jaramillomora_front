@@ -1,0 +1,38 @@
+<app-card-content-page
+  [cardTitle]="'Cargue IFC'"
+  [showHeader]="true"
+  [showContent]="true"
+  [cardClass]="'card-md'"
+  [headerClass]="'card-header'"
+  [blockClass]="'card-body'"
+  [padding]="16"
+>
+  <form
+    app-form
+    [formGroup]="cargueIfcForm"
+    [layout]="'vertical'"
+    [validateOnSubmit]="true"
+    (formSubmit)="cargueIfc()"
+  >
+    <div class="row">
+      <div class="col-12">
+        <nz-form-item>
+          <nz-form-label nzRequired>Archivos IFC</nz-form-label>
+          <nz-form-control nzErrorTip="Debe seleccionar al menos un archivo IFC">
+            <app-upload-file
+              formControlName="archivosIfc"
+              [multiple]="true"
+              [accept]="'.ifc'"
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end mt-3">
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading()">
+        {{ isLoading() ? 'Cargando…' : 'Cargar' }}
+      </button>
+    </div>
+  </form>
+</app-card-content-page>

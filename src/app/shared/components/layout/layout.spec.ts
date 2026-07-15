@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideNzIcons } from 'ng-zorro-antd/icon';
 import {
@@ -23,10 +24,12 @@ describe('Layout', () => {
       imports: [Layout],
       providers: [
         provideRouter([]),
+        provideNoopAnimations(),
         {
           provide: Auth,
           useValue: {
             getAuthUser: () => ({ full_name: 'Usuario Test', email: 'test@example.com' }),
+            getAccessToken: () => 'token-test',
             logout: () => undefined,
           },
         },

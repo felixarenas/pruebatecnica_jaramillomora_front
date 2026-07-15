@@ -1,20 +1,12 @@
 <nz-layout class="symphony-layout">
-  <nz-sider
-    class="symphony-sider"
-    nzCollapsible
-    [(nzCollapsed)]="isCollapsed"
-    [nzTrigger]="null"
-    [nzWidth]="260"
-    [nzCollapsedWidth]="72"
-    nzBreakpoint="lg"
-    [nzZeroTrigger]="null"
-  >
+  <nz-sider class="symphony-sider" nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null" [nzWidth]="260"
+    [nzCollapsedWidth]="72" nzBreakpoint="lg" [nzZeroTrigger]="null">
     <div class="symphony-logo" [class.collapsed]="isCollapsed">
       @if (!isCollapsed) {
-        <img src="assets/images/logo-dark.svg" alt="Symphony" />
-        <span>Symphony</span>
+      <img src="assets/images/logo-dark.svg" alt="Symphony" />
+      <span>Symphony</span>
       } @else {
-        <img src="assets/images/logo-dark.svg" alt="Symphony" class="logo-icon" />
+      <img src="assets/images/logo-dark.svg" alt="Symphony" class="logo-icon" />
       }
     </div>
 
@@ -34,6 +26,9 @@
           <li nz-menu-item nzMatchRouter routerLink="/cliente-servicios">
             <span>Cliente-Servicios</span>
           </li>
+          <li nz-menu-item nzMatchRouter routerLink="/cargue-ifc">
+            <span>Cargue IFC</span>
+          </li>
         </ul>
       </li>
       <li nz-submenu nzTitle="Administración" nzIcon="setting">
@@ -52,26 +47,16 @@
   <nz-layout class="symphony-main">
     <nz-header class="symphony-header">
       <div class="header-left">
-        <button
-          type="button"
-          class="menu-trigger"
-          (click)="isCollapsed = !isCollapsed"
-          [attr.aria-label]="isCollapsed ? 'Expandir menú' : 'Colapsar menú'"
-        >
+        <button type="button" class="menu-trigger" (click)="isCollapsed = !isCollapsed"
+          [attr.aria-label]="isCollapsed ? 'Expandir menú' : 'Colapsar menú'">
           <nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" />
         </button>
         <span class="header-title">Panel de control</span>
       </div>
       <div class="header-right">
         <nz-icon nzType="bell" class="header-icon" />
-        <div
-          class="user-avatar"
-          nz-dropdown
-          [nzDropdownMenu]="userMenu"
-          nzTrigger="click"
-          nzPlacement="bottomRight"
-          nzOverlayClassName="symphony-user-dropdown"
-        >
+        <div class="user-avatar" nz-dropdown [nzDropdownMenu]="userMenu" nzTrigger="click" nzPlacement="bottomRight"
+          nzOverlayClassName="symphony-user-dropdown">
           <nz-icon nzType="user" />
         </div>
         <nz-dropdown-menu #userMenu="nzDropdownMenu">
@@ -84,11 +69,7 @@
               <span class="user-dropdown-label">Correo</span>
               <span class="user-dropdown-value">{{ authUser()?.email ?? '—' }}</span>
             </div>
-            <button
-              type="button"
-              class="user-dropdown-logout"
-              (click)="logout()"
-            >
+            <button type="button" class="user-dropdown-logout" (click)="logout()">
               Cerrar sesión
             </button>
           </div>
@@ -99,6 +80,7 @@
     <nz-content class="symphony-content">
       <div class="inner-content">
         <router-outlet />
+        <app-loading />
       </div>
     </nz-content>
 

@@ -1,0 +1,58 @@
+<div class="upload-file">
+  @if (label()) {
+    <label class="upload-file__label">{{ label() }}</label>
+  }
+
+  <div class="upload-file__row">
+    <input
+      nz-input
+      class="upload-file__name"
+      type="text"
+      readonly
+      [value]="fileName()"
+      [placeholder]="placeholder()"
+      [disabled]="isDisabled()"
+      (blur)="onTouched()"
+      aria-readonly="true"
+    />
+
+    <button
+      nz-button
+      nzType="primary"
+      type="button"
+      class="upload-file__browse"
+      [disabled]="isDisabled()"
+      [nz-tooltip]="buttonTitle()"
+      [attr.aria-label]="buttonTitle()"
+      (click)="openFilePicker()"
+    >
+      <nz-icon [nzType]="buttonIcon()" nzTheme="outline"></nz-icon>
+      <span class="upload-file__browse-text">Buscar</span>
+    </button>
+
+    @if (fileName()) {
+      <button
+        nz-button
+        nzType="default"
+        type="button"
+        class="upload-file__clear"
+        [disabled]="isDisabled()"
+        nz-tooltip="Quitar archivo"
+        aria-label="Quitar archivo"
+        (click)="clear()"
+      >
+        <nz-icon nzType="close" nzTheme="outline"></nz-icon>
+      </button>
+    }
+  </div>
+
+  <input
+    #fileInput
+    class="upload-file__native"
+    type="file"
+    [accept]="accept()"
+    [multiple]="multiple()"
+    [disabled]="isDisabled()"
+    (change)="onFileInputChange($event)"
+  />
+</div>

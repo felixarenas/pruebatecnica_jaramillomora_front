@@ -1,0 +1,14 @@
+@if (isLoading()) {
+  <div
+    class="loading-overlay"
+    role="status"
+    aria-live="polite"
+    aria-busy="true"
+    aria-label="Cargando"
+  >
+    <div class="loading-center">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <span class="loading-text">Cargando…</span>
+    </div>
+  </div>
+}

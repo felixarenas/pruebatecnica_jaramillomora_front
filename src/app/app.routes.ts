@@ -24,6 +24,12 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/servicios/cliente-servicios/principal/principal').then(m => m.Principal),
                 title: 'Consultar Servicios de Clientes',
             },
+
+            {
+                path: 'cargue-ifc',
+                loadComponent: () => import('./pages/cargue-ifc/cargue-ifc').then(m => m.CargueIfc),
+                title: 'Cargue IFC',
+            },
         ]
     },
     { path: '**', loadComponent: () => import('./shared/pages/notfound/notfound').then(m => m.Notfound), title: 'Not Found' },

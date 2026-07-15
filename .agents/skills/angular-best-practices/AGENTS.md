@@ -128,7 +128,9 @@ export class Card {
 
 ### 4.3 Reutilizar shared (`comp-reuse-shared`)
 
-Usar `app-card-content-page`, `app-input-text`, `app-datapicker` antes de crear inputs ad hoc.
+Usar `app-card-content-page`, `app-input-text`, `app-datapicker`, `form[app-form]` antes de crear inputs/forms ad hoc.
+
+`form[app-form]` se usa sobre un `<form>` nativo con `[formGroup]` del padre y notifica el submit con `(formSubmit)` o `[submitHandler]`.
 
 ---
 

@@ -1,0 +1,48 @@
+@use '../../../scss/settings/symphony-tokens' as *;
+
+:host {
+  display: contents;
+}
+
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 30, 30, 0.55);
+  backdrop-filter: blur(1px);
+  cursor: wait;
+  user-select: none;
+}
+
+.loading-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.loading-spinner {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-top-color: $symphony-orange;
+  animation: loading-spin 0.75s linear infinite;
+}
+
+.loading-text {
+  color: #fff;
+  font-family: $symphony-font-family;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+@keyframes loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

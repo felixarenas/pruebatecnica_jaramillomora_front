@@ -49,7 +49,7 @@ Usar este skill cuando el prompt implique:
 - `comp-onpush-when-possible` — `ChangeDetectionStrategy.OnPush` en componentes nuevos
 - `comp-signals-inputs` — Preferir `input()` / `output()` / `signal()` en código nuevo
 - `comp-no-business-logic` — Sin llamadas HTTP ni reglas de negocio pesadas en plantillas
-- `comp-reuse-shared` — Reutilizar `Card`, `InputText`, `Datapicker`, `Layout`
+- `comp-reuse-shared` — Reutilizar `Card`, `InputText`, `Datapicker`, `Form` (`app-form`), `UploadFile`, `Layout`
 
 ### 3. State & Reactivity (HIGH)
 

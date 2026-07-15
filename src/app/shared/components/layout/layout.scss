@@ -272,11 +272,15 @@
 
 .symphony-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: $symphony-content-padding;
   background: $symphony-surface-muted;
 }
 
 .inner-content {
+  position: relative;
+  flex: 1;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;

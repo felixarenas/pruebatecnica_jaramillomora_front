@@ -59,7 +59,7 @@ Antes de generar código, aplicar estas skills. Ante conflicto entre “atajo”
 ### 3.1 Reglas Angular prioritarias (resumen del skill)
 
 1. **Architecture (CRITICAL):** features en `pages/<feature>/`; solo standalone; smart pages / dumb shared; un servicio por caso de uso; capa `core/` como **objetivo** para transversales (auth, API, guards, interceptors).
-2. **Components (CRITICAL):** `OnPush` en componentes nuevos; preferir `input()` / `output()` / `signal()`; sin HTTP en plantillas; reutilizar `Card`, `InputText`, `Datapicker`, `Layout`.
+2. **Components (CRITICAL):** `OnPush` en componentes nuevos; preferir `input()` / `output()` / `signal()`; sin HTTP en plantillas; reutilizar `Card`, `InputText`, `Datapicker`, `UploadFile` (`app-upload-file`), `Form` (`app-form`), `Layout`.
 3. **State (HIGH):** `async` pipe o `takeUntilDestroyed()`; sin subscribe anidados; signals local + RxJS HTTP.
 4. **Forms (HIGH):** Reactive Forms; CVA en inputs compartidos; mensajes en **español**.
 5. **HTTP (HIGH):** solo en servicios; mapear `IApiResponse<T>`; interceptors funcionales.
@@ -98,7 +98,7 @@ frontend/
         │       └── cliente-servicios/principal/
         ├── services/         # HTTP por caso de uso (+ client/Api + JWT)
         └── shared/
-            ├── components/   # card, datapicker, input-text, layout
+            ├── components/   # card, datapicker, input-text, form, upload-file, button, layout
             ├── pages/notfound/
             └── shared.module.ts  # LEGACY — no usar en código nuevo
 ```
@@ -172,6 +172,7 @@ La clase `Api` (`services/client/api.ts`):
 | Auth | `POST users/auth/login` |
 | Clientes | `GET getall`, `findbyid`, `findbyidentity`; `POST /`; `PATCH update`; `DELETE ?id=`; `GET gettiposidentity` |
 | Servicios | `GET getall`, `findbyid`; `POST /`; `PATCH update`; `DELETE ?id=`; `GET gettiposservicio`, `getServiciosByCliente` |
+| Process IFC | `POST process-ifc` (payload base64 → storage backend) |
 
 Prefijos reales: `clientes/...`, `servicios/...` (como en cada servicio). Confirmar contratos en Swagger del backend antes de inventar campos.
 
@@ -217,7 +218,7 @@ Hoy ambos apuntan a `http://localhost:3050/api/v1`. Cambiar `apiUrl` ahí para a
 ### Componente reutilizable
 
 - Solo en `shared/components/<nombre>/`, standalone, idealmente CVA si es input de form.
-- Reutilizar antes de duplicar `Card` / `InputText` / `Datapicker`.
+- Reutilizar antes de duplicar `Card` / `InputText` / `Datapicker` / `Form` (`app-form`).
 
 ### Cambio de API base
 

@@ -12,12 +12,15 @@ import { provideNzIcons } from 'ng-zorro-antd/icon';
 import {
   AppstoreOutline,
   BellOutline,
+  CloseOutline,
+  CloudUploadOutline,
   HomeOutline,
   MenuFoldOutline,
   MenuUnfoldOutline,
   PlusOutline,
   SearchOutline,
   SettingOutline,
+  UploadOutline,
   UserOutline,
 } from '@ant-design/icons-angular/icons';
 
@@ -33,6 +36,9 @@ const nzIcons = [
   UserOutline,
   PlusOutline,
   SearchOutline,
+  CloudUploadOutline,
+  UploadOutline,
+  CloseOutline,
 ];
 
 export const appConfig: ApplicationConfig = {

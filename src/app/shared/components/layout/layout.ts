@@ -9,6 +9,7 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 
 import { Auth } from '../../../services/auth';
+import { Loading } from '../loading/loading';
 
 @Component({
   selector: 'app-layout',
@@ -20,6 +21,7 @@ import { Auth } from '../../../services/auth';
     NzIconModule,
     NzLayoutModule,
     NzMenuModule,
+    Loading,
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.scss',

@@ -1,0 +1,8 @@
+<button type="button" nz-button [nzType]="type()" [nzSize]="size()" [nzShape]="shape()" [nzGhost]="ghost()"
+    [nzBlock]="block()" [nzLoading]="loading()" [disabled]="disabled()" (click)="click.emit($event)">
+    @if (loading()) {
+        <span>{{ buttonLoadingText() || 'Cargando...' }}</span>
+    } @else {
+        <ng-content />
+    }
+</button>
