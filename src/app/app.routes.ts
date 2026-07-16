@@ -30,6 +30,11 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/cargue-ifc/cargue-ifc').then(m => m.CargueIfc),
                 title: 'Cargue IFC',
             },
+            {
+                path: 'show-model3d',
+                loadComponent: () => import('./pages/show-model3d/show-model3d').then(m => m.ShowModel3d),
+                title: 'Modelos IFC',
+            },
         ]
     },
     { path: '**', loadComponent: () => import('./shared/pages/notfound/notfound').then(m => m.Notfound), title: 'Not Found' },

@@ -1,0 +1,32 @@
+@use '../../../scss/settings/symphony-tokens' as *;
+
+.select-container {
+  width: 100%;
+
+  .select-label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: $symphony-text;
+  }
+
+  .select-field {
+    width: 100%;
+
+    ::ng-deep .ant-select-selector {
+      border-radius: $symphony-radius !important;
+      border-color: $symphony-border !important;
+      transition: border-color $symphony-transition, box-shadow $symphony-transition;
+    }
+
+    &:hover ::ng-deep .ant-select-selector {
+      border-color: $symphony-orange-muted !important;
+    }
+
+    &.ant-select-focused ::ng-deep .ant-select-selector {
+      border-color: $symphony-orange !important;
+      box-shadow: 0 0 0 2px rgba($symphony-orange, 0.12) !important;
+    }
+  }
+}

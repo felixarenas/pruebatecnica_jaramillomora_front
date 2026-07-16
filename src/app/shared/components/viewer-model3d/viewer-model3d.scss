@@ -1,0 +1,75 @@
+@use '../../../scss/settings/symphony-tokens' as *;
+
+.viewer-model3d {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: var(--viewer-height, 560px);
+  border: 1px solid $symphony-border;
+  border-radius: $symphony-radius;
+  background: $symphony-surface;
+  overflow: hidden;
+
+  &:fullscreen {
+    min-height: 100vh;
+    border-radius: 0;
+  }
+
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-bottom: 1px solid $symphony-border;
+    background: $symphony-surface-muted;
+  }
+
+  &__stage {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: var(--viewer-height, 560px);
+  }
+
+  &__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+
+    canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba($symphony-surface, 0.72);
+    text-align: center;
+    color: $symphony-text-secondary;
+    pointer-events: none;
+
+    &--error {
+      color: #a8071a;
+      background: rgba(#fff1f0, 0.92);
+      pointer-events: auto;
+    }
+
+    &--empty {
+      pointer-events: none;
+    }
+
+    p {
+      margin: 0;
+      max-width: 420px;
+      font-size: 0.9375rem;
+    }
+  }
+}

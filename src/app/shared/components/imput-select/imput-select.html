@@ -1,0 +1,25 @@
+<div class="select-container">
+  @if (label()) {
+    <label class="select-label" [attr.for]="controlId()">{{ label() }}</label>
+  }
+
+  <nz-select
+    class="select-field"
+    [attr.id]="controlId()"
+    [ngModel]="value()"
+    [nzPlaceHolder]="placeholder()"
+    [nzDisabled]="isDisabled()"
+    [nzAllowClear]="allowClear()"
+    [nzShowSearch]="showSearch()"
+    (ngModelChange)="onSelectChange($event)"
+    (nzBlur)="onBlur()"
+  >
+    @for (option of options(); track option.value) {
+      <nz-option
+        [nzValue]="option.value"
+        [nzLabel]="option.label"
+        [nzDisabled]="option.disabled === true"
+      ></nz-option>
+    }
+  </nz-select>
+</div>

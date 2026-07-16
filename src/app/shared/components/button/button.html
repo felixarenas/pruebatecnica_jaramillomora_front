@@ -1,8 +1,27 @@
-<button type="button" nz-button [nzType]="type()" [nzSize]="size()" [nzShape]="shape()" [nzGhost]="ghost()"
-    [nzBlock]="block()" [nzLoading]="loading()" [disabled]="disabled()" (click)="click.emit($event)">
-    @if (loading()) {
-        <span>{{ buttonLoadingText() || 'Cargando...' }}</span>
-    } @else {
-        <ng-content />
+<button
+  nz-button
+  class="app-button"
+  [attr.type]="htmlType()"
+  [attr.title]="title() || null"
+  [nzType]="type()"
+  [nzSize]="size()"
+  [nzShape]="shape()"
+  [nzGhost]="ghost()"
+  [nzBlock]="block()"
+  [nzLoading]="loading()"
+  [nzDanger]="danger()"
+  [disabled]="disabled() || loading()"
+  (click)="onHostClick($event)"
+>
+  @if (loading()) {
+    <span class="app-button__label">{{ loadingText() }}</span>
+  } @else {
+    @if (icon()) {
+      <nz-icon class="app-button__icon" [nzType]="icon()" nzTheme="outline"></nz-icon>
     }
+    @if (label()) {
+      <span class="app-button__label">{{ label() }}</span>
+    }
+    <ng-content />
+  }
 </button>

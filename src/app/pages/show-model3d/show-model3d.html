@@ -1,0 +1,21 @@
+<app-card-content-page [cardTitle]="'Visor de Modelos IFC'" [showHeader]="true" [showContent]="true"
+    [cardClass]="'card-md'" [headerClass]="'card-header'" [blockClass]="'card-body'" [padding]="16">
+    <form [formGroup]="form" class="show-model3d-form">
+        <div class="row g-3 align-items-end">
+            <div class="col-8 col-lg-9">
+                <app-imput-select label="Archivos IFC disponibles" placeholder="Seleccione un archivo IFC"
+                    [options]="tiposOptions()" formControlName="id_archivo_ifc" />
+            </div>
+            <div class="col-4 col-lg-3">
+                <app-button type="primary" icon="eye" label="Ver Modelo" [block]="true" (clicked)="procesar()" />
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                <app-viewer-model3d [modelUrl]="modelUrl()" height="640px" (loaded)="onViewerLoaded()"
+                    (error)="onViewerError($event)" />
+            </div>
+        </div>
+    </form>
+</app-card-content-page>

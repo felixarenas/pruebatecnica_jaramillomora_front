@@ -1,0 +1,31 @@
+@use '../../../scss/settings/symphony-tokens' as *;
+
+:host {
+  display: inline-flex;
+  vertical-align: middle;
+
+  &.app-button-host--block {
+    display: flex;
+    width: 100%;
+  }
+}
+
+.app-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: $symphony-radius;
+  font-family: $symphony-font-family;
+  transition: background-color $symphony-transition, border-color $symphony-transition,
+    color $symphony-transition, box-shadow $symphony-transition;
+
+  .app-button__icon {
+    font-size: 1em;
+    line-height: 1;
+  }
+
+  .app-button__label {
+    line-height: 1.2;
+  }
+}

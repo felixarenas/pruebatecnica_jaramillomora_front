@@ -9,10 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [15/07/2026 20:37:47] Add show-model3d page with That Open IFC viewer, Property Sets JSON extraction, imput-select component, and getFileIfcAll client
+- [15/07/2026 20:37:47] Add @thatopen/components, fragments, three and web-ifc dependencies for BIM visualization
 - [15/07/2026 16:36:09] Add Cargue IFC page with upload-file/form/button shared components, process-ifc API client, and manual Loading overlay driven by LoadingService signal
 - [14/07/2026 21:02:28] Initial Symphony Angular 21 SPA with JWT login, clients/services CRUD, and shared layout
 - [14/07/2026 21:02:28] Agent/developer context (AGENTS.md, README.md) and project skills under .agents/
 
 ### Changed
 
+- [15/07/2026 20:37:47] Extend shared Button with label/icon/loading API and register show-model3d route/menu entry
 - [15/07/2026 16:36:09] Register cargue-ifc route/menu entry and mount app-loading in layout content area only

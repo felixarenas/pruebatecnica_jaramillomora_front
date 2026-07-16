@@ -20,6 +20,12 @@ export interface ProcessIfcResult {
   ext: string;
 }
 
+/** Ítem listado por `GET process-ifc/getFileIfcAll`. */
+export interface ProcessIfcFileItem {
+  nom_file: string;
+  url: string;
+}
+
 /**
  * Envía un archivo (IFC u otra extensión) codificado en base64
  * al endpoint `POST /api/v1/process-ifc` para almacenarlo en el backend.
@@ -37,5 +43,12 @@ export class Processifc {
    */
   process(dto: ProcessIfcDto): Observable<IApiResponse<ProcessIfcResult>> {
     return this.api.requestApi<ProcessIfcResult>('POST', 'process-ifc', dto);
+  }
+
+  /**
+   * Obtiene la lista de archivos IFC disponibles en el backend.
+   */
+  getFileIfcAll(): Observable<IApiResponse<ProcessIfcFileItem[]>> {
+    return this.api.requestApi<ProcessIfcFileItem[]>('GET', 'process-ifc/getFileIfcAll');
   }
 }

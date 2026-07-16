@@ -10,14 +10,19 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { jwtInterceptor } from './services/client/jwt.interceptor';
 import { provideNzIcons } from 'ng-zorro-antd/icon';
 import {
+  AimOutline,
   AppstoreOutline,
   BellOutline,
   CloseOutline,
   CloudUploadOutline,
+  CompressOutline,
+  ExpandOutline,
+  EyeOutline,
   HomeOutline,
   MenuFoldOutline,
   MenuUnfoldOutline,
   PlusOutline,
+  ReloadOutline,
   SearchOutline,
   SettingOutline,
   UploadOutline,
@@ -39,6 +44,11 @@ const nzIcons = [
   CloudUploadOutline,
   UploadOutline,
   CloseOutline,
+  EyeOutline,
+  AimOutline,
+  ReloadOutline,
+  ExpandOutline,
+  CompressOutline,
 ];
 
 export const appConfig: ApplicationConfig = {
