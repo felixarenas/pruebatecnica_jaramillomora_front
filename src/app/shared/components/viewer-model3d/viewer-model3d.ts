@@ -17,6 +17,7 @@ import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import * as OBC from '@thatopen/components';
 import type { FragmentsModel, ItemAttribute, ItemData } from '@thatopen/fragments';
 import * as THREE from 'three';
+import * as WEBIFC from 'web-ifc';
 import type {
   IfcElementNonGraphical,
   IfcMaterialInfo,
@@ -25,10 +26,66 @@ import type {
   IfcNonGraphicalExport,
   IfcPropertyMap,
 } from './viewer-model3d.models';
+import { environment } from '../../../../environments/environment';
+
+/**
+ * Máximo que el binding WASM de web-ifc acepta para `MEMORY_LIMIT`
+ * (`unsigned int` → [0, 4294967295]). 4 GiB exactos (4294967296) desborda.
+ */
+const WEB_IFC_UINT32_MAX = 0xffffffff;
+/** Default de web-ifc si el env no es usable. */
+const WEB_IFC_MEMORY_LIMIT_DEFAULT = 2 * 1024 * 1024 * 1024;
+
+const gbToMemoryLimitBytes = (gb: number): number => {
+  const bytes = Math.floor(Number(gb) * 1024 * 1024 * 1024);
+  if (!Number.isFinite(bytes) || bytes <= 0) {
+    return WEB_IFC_MEMORY_LIMIT_DEFAULT;
+  }
+  return Math.min(bytes, WEB_IFC_UINT32_MAX);
+};
 
 type ViewerWorld = OBC.SimpleWorld<OBC.SimpleScene, OBC.SimpleCamera, OBC.SimpleRenderer>;
 
 const PROPERTY_DATA_BATCH_SIZE = 250;
+
+/** WASM de web-ifc servido vía angular.json → /web-ifc/ */
+const WEB_IFC_WASM_PATH = '/web-ifc/';
+/** Worker de fragments servido vía angular.json → /fragments-worker/ */
+const FRAGMENTS_WORKER_URL = '/fragments-worker/worker.mjs';
+
+/**
+ * Límite de heap de web-ifc al abrir el modelo.
+ * Debe caber en `unsigned int` WASM; ver {@link gbToMemoryLimitBytes}.
+ */
+const WEB_IFC_MEMORY_LIMIT_BYTES = gbToMemoryLimitBytes(environment.maxMemoryRender);
+
+/**
+ * En apps empaquetadas (Angular/esbuild) el build multi-thread de web-ifc
+ * crea `new Worker(undefined)` porque `_scriptDirectory` no existe →
+ * `http://localhost:4200/undefined` (HTML) → Unexpected token '<'.
+ * Forzamos single-thread; el WASM sigue sirviéndose desde {@link WEB_IFC_WASM_PATH}.
+ */
+let webIfcSingleThreadPatched = false;
+function ensureWebIfcSingleThread(): void {
+  if (webIfcSingleThreadPatched) {
+    return;
+  }
+  const proto = WEBIFC.IfcAPI.prototype as WEBIFC.IfcAPI & {
+    Init: (
+      customLocateFileHandler?: WEBIFC.LocateFileHandlerFn,
+      forceSingleThread?: boolean,
+    ) => Promise<void>;
+  };
+  const originalInit = proto.Init;
+  proto.Init = function (
+    this: WEBIFC.IfcAPI,
+    customLocateFileHandler?: WEBIFC.LocateFileHandlerFn,
+    _forceSingleThread?: boolean,
+  ): Promise<void> {
+    return originalInit.call(this, customLocateFileHandler, true);
+  };
+  webIfcSingleThreadPatched = true;
+}
 
 const QUANTITY_VALUE_KEYS = [
   'LengthValue',
@@ -523,7 +580,8 @@ export class ViewerModel3d implements OnDestroy {
       components.get(OBC.Grids).create(world);
 
       const fragments = components.get(OBC.FragmentsManager);
-      fragments.init(await OBC.FragmentsManager.getWorker());
+      // Worker local (evita unpkg + COEP). Misma origin → compatible con require-corp.
+      fragments.init(FRAGMENTS_WORKER_URL);
 
       fragments.list.onItemSet.add(({ value: model }) => {
         model.useCamera(world.camera.three);
@@ -536,12 +594,19 @@ export class ViewerModel3d implements OnDestroy {
       };
       world.camera.controls.addEventListener('update', this.cameraUpdateHandler);
 
+      ensureWebIfcSingleThread();
+
       const ifcLoader = components.get(OBC.IfcLoader);
       await ifcLoader.setup({
         autoSetWasm: false,
         wasm: {
-          path: 'https://unpkg.com/web-ifc@0.0.77/',
+          // Servido desde node_modules/web-ifc vía angular.json → /web-ifc/
+          path: WEB_IFC_WASM_PATH,
           absolute: true,
+        },
+        webIfc: {
+          COORDINATE_TO_ORIGIN: true,
+          MEMORY_LIMIT: WEB_IFC_MEMORY_LIMIT_BYTES,
         },
       });
 
@@ -591,17 +656,29 @@ export class ViewerModel3d implements OnDestroy {
         throw new Error(`No se pudo descargar el IFC (${response.status})`);
       }
 
-      const buffer = new Uint8Array(await response.arrayBuffer());
+      const contentType = response.headers.get('content-type') ?? '';
+      if (contentType.includes('text/html')) {
+        throw new Error(
+          'La URL no devolvió un IFC (recibió HTML). Comprueba que modelUrl apunte a /storage/….ifc',
+        );
+      }
+
+      const raw = await response.arrayBuffer();
+      const buffer = new Uint8Array(raw.byteLength);
+      buffer.set(new Uint8Array(raw));
+
+      if (!this.looksLikeIfc(buffer)) {
+        throw new Error(
+          'El archivo descargado no parece un IFC válido (cabecera ISO-10303-21 ausente).',
+        );
+      }
+
       if (seq !== this.loadSeq) {
         return;
       }
 
       const name = this.fileNameFromUrl(url);
-      await this.ifcLoader.load(buffer, true, name, {
-        processData: {
-          progressCallback: () => undefined,
-        },
-      });
+      await this.ifcLoader.load(buffer, true, name);
 
       if (seq !== this.loadSeq) {
         return;
@@ -614,7 +691,7 @@ export class ViewerModel3d implements OnDestroy {
       if (seq !== this.loadSeq) {
         return;
       }
-      const message = err instanceof Error ? err.message : 'Error al cargar el modelo IFC';
+      const message = this.formatLoadError(err);
       this.hasModel.set(false);
       this.setError(message);
     } finally {
@@ -652,6 +729,41 @@ export class ViewerModel3d implements OnDestroy {
       this.ifcLoader = null;
       this.initialized = false;
     });
+  }
+
+  private formatLoadError(err: unknown): string {
+    const raw = err instanceof Error ? err.message : String(err ?? '');
+    const lower = raw.toLowerCase();
+    if (
+      lower.includes('bad_alloc') ||
+      lower.includes('aborted') ||
+      lower.includes('out of memory') ||
+      lower.includes('memory access out of bounds')
+    ) {
+      return (
+        'No hay memoria suficiente para procesar este IFC en el navegador. ' +
+        'Prueba con un modelo más ligero o cierra otras pestañas.'
+      );
+    }
+    if (lower.includes('index out of bounds')) {
+      return (
+        'Error al interpretar el IFC (índice fuera de rango). ' +
+        'Suele ocurrir si la URL no apunta al archivo real o el IFC está corrupto.'
+      );
+    }
+    return raw || 'Error al cargar el modelo IFC';
+  }
+
+  /** Comprueba cabecera STEP típica de IFC (`ISO-10303-21`). */
+  private looksLikeIfc(buffer: Uint8Array): boolean {
+    if (buffer.byteLength < 16) {
+      return false;
+    }
+    const head = new TextDecoder('utf-8', { fatal: false })
+      .decode(buffer.subarray(0, Math.min(buffer.byteLength, 128)))
+      .trimStart()
+      .toUpperCase();
+    return head.startsWith('ISO-10303-21');
   }
 
   private setLoading(value: boolean): void {

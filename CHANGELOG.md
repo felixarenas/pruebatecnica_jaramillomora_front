@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- [17/07/2026 15:03:32] Fix IFC 3D viewer load: local web-ifc WASM/fragments worker, single-thread Init, MEMORY_LIMIT from env (uint32-safe), validate IFC bytes, and use storage URL (not nom_file) in show-model3d
+
 ### Added
 
 - [17/07/2026 00:07:23] Add process-grafic-ifc page to select stored IFC files and call process-property-sets-ifc via Processifc.processGrafic
@@ -18,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [17/07/2026 15:03:32] Serve web-ifc WASM and fragments worker from node_modules via angular.json; add COOP/COEP headers on ng serve and maxMemoryRender env
 - [17/07/2026 00:07:23] Register process-grafic-ifc route/menu entry and use nom_file as select value in show-model3d
 - [15/07/2026 20:37:47] Extend shared Button with label/icon/loading API and register show-model3d route/menu entry
 - [15/07/2026 16:36:09] Register cargue-ifc route/menu entry and mount app-loading in layout content area only

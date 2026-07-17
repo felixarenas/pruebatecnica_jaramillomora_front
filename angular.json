@@ -30,6 +30,16 @@
                 "input": "public"
               },
               {
+                "glob": "*.wasm",
+                "input": "node_modules/web-ifc",
+                "output": "/web-ifc"
+              },
+              {
+                "glob": "worker*.mjs",
+                "input": "node_modules/@thatopen/fragments/dist/Worker",
+                "output": "/fragments-worker"
+              },
+              {
                 "glob": "**/*",
                 "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
                 "output": "/assets/"
@@ -72,6 +82,12 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "headers": {
+              "Cross-Origin-Opener-Policy": "same-origin",
+              "Cross-Origin-Embedder-Policy": "require-corp"
+            }
+          },
           "configurations": {
             "production": {
               "buildTarget": "symphony:build:production"

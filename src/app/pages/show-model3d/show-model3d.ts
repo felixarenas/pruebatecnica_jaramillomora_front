@@ -70,7 +70,7 @@ export class ShowModel3d implements OnInit {
 
         this.tiposOptions.set(
           res.datos.map((item) => ({
-            value: item.nom_file,
+            value: item.url,
             label: item.nom_file,
           })),
         );
