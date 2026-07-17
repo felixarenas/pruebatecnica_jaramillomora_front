@@ -43,8 +43,6 @@ export class ShowModel3d implements OnInit {
     this.error.set(null);
     this.success.set(false);
     this.modelUrl.set(url);
-
-    //this.onLoadPropertySets();
   }
 
   onViewerLoaded(): void {
@@ -72,7 +70,7 @@ export class ShowModel3d implements OnInit {
 
         this.tiposOptions.set(
           res.datos.map((item) => ({
-            value: item.url,
+            value: item.nom_file,
             label: item.nom_file,
           })),
         );

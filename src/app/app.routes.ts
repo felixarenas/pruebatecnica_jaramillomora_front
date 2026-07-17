@@ -9,21 +9,6 @@ export const routes: Routes = [
         title: 'Main',
         children: [
             { path: 'home', loadComponent: () => import('./pages/main/home/home').then(m => m.Home), title: 'Home' },
-            {
-                path: 'clientes',
-                loadComponent: () => import('./pages/clientes/principal/principal').then(m => m.Principal),
-                title: 'Clientes',
-            },
-            {
-                path: 'servicios',
-                loadComponent: () => import('./pages/servicios/principal/principal').then(m => m.Principal),
-                title: 'Servicios',
-            },
-            {
-                path: 'cliente-servicios',
-                loadComponent: () => import('./pages/servicios/cliente-servicios/principal/principal').then(m => m.Principal),
-                title: 'Consultar Servicios de Clientes',
-            },
 
             {
                 path: 'cargue-ifc',
@@ -34,6 +19,11 @@ export const routes: Routes = [
                 path: 'show-model3d',
                 loadComponent: () => import('./pages/show-model3d/show-model3d').then(m => m.ShowModel3d),
                 title: 'Modelos IFC',
+            },
+            {
+                path: 'process-grafic-ifc',
+                loadComponent: () => import('./pages/process-grafic-ifc/process-grafic-ifc').then(m => m.ProcessGraficIfc),
+                title: 'Graficación de Elementos IFC',
             },
         ]
     },

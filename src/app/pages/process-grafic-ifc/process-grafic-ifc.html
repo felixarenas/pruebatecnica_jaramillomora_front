@@ -1,0 +1,21 @@
+<app-card-content-page [cardTitle]="'Graficación de Elementos IFC'" [showHeader]="true" [showContent]="true"
+    [cardClass]="'card-md'" [headerClass]="'card-header'" [blockClass]="'card-body'" [padding]="16">
+    <form [formGroup]="form" class="show-model3d-form">
+        <div class="row g-3 align-items-end">
+            <div class="col-8 col-lg-9">
+                <app-imput-select label="Archivos IFC disponibles" placeholder="Seleccione un archivo IFC"
+                    [options]="tiposOptions()" formControlName="id_archivo_ifc" />
+            </div>
+            <div class="col-4 col-lg-3">
+                <app-button type="primary" icon="area-chart" label="Generar Graficos" [block]="true"
+                    (clicked)="procesar()" />
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12">
+
+            </div>
+        </div>
+    </form>
+</app-card-content-page>

@@ -51,4 +51,8 @@ export class Processifc {
   getFileIfcAll(): Observable<IApiResponse<ProcessIfcFileItem[]>> {
     return this.api.requestApi<ProcessIfcFileItem[]>('GET', 'process-ifc/getFileIfcAll');
   }
+
+  processGrafic(nom_file: string): Observable<IApiResponse<ProcessIfcResult>> {
+    return this.api.requestApi<ProcessIfcResult>('POST', 'process-ifc/process-property-sets-ifc', { nom_file });
+  }
 }
