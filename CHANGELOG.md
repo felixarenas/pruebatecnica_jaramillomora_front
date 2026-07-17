@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [17/07/2026 15:05:31] Add local web-ifc WASM assets under `src/app/shared/web-ifc` (web-ifc.wasm, web-ifc-mt.wasm, package metadata, license)
 - [17/07/2026 00:07:23] Add process-grafic-ifc page to select stored IFC files and call process-property-sets-ifc via Processifc.processGrafic
 - [15/07/2026 20:37:47] Add show-model3d page with That Open IFC viewer, Property Sets JSON extraction, imput-select component, and getFileIfcAll client
 - [15/07/2026 20:37:47] Add @thatopen/components, fragments, three and web-ifc dependencies for BIM visualization
