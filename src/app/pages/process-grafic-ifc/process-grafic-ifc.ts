@@ -6,12 +6,17 @@ import { ViewerModel3d } from '../../shared/components/viewer-model3d/viewer-mod
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { LoadingService } from '../../services/loading';
 import { Processifc } from '../../services/processifc';
+import { InputTable } from '../../shared/components/input-table/input-table';
+import { InputTableGroupby } from '../../shared/components/input-table-groupby/input-table-groupby';
+import { InputGraficBar } from '../../shared/components/input-grafic-bar/input-grafic-bar';
+import { InputGraficCircle } from '../../shared/components/input-grafic-circle/input-grafic-circle';
 
 @Component({
   selector: 'app-process-grafic-ifc',
-  imports: [Card, ImputSelect, Button, ViewerModel3d, CommonModule, ReactiveFormsModule],
+  imports: [Card, ImputSelect, Button, ViewerModel3d, CommonModule, ReactiveFormsModule, NzTabsModule, InputTable, InputTableGroupby, InputGraficBar, InputGraficCircle],
   templateUrl: './process-grafic-ifc.html',
   styleUrl: './process-grafic-ifc.scss',
 })
@@ -25,6 +30,8 @@ export class ProcessGraficIfc {
   readonly isLoading = this.loading.isLoading;
   readonly error = signal<string | null>(null);
   readonly success = signal<boolean>(false);
+  readonly datosCategorias = signal<any>(null);
+  readonly datosNiveles = signal<any>(null);
 
   readonly form = this.fb.nonNullable.group({
     id_archivo_ifc: this.fb.control<string | null>(null),
@@ -60,6 +67,8 @@ export class ProcessGraficIfc {
     this.error.set(null);
     this.success.set(false);
     this.isLoading.set(true);
+    this.datosCategorias.set(null);
+    this.datosNiveles.set(null);
 
     const idArchivoIfc = this.form.get('id_archivo_ifc')?.value;
     if (!idArchivoIfc) {
@@ -72,12 +81,23 @@ export class ProcessGraficIfc {
       next: (res: any) => {
         if (!res.status || !res.datos) {
           this.message.error('No se pudo procesar el archivo IFC');
+          this.isLoading.set(false);
           return;
         }
 
         const { data, status, mensaje } = res.datos;
 
-        console.log(data)
+        if (!status) {
+          this.message.error(mensaje);
+          this.isLoading.set(false);
+          return;
+        }
+
+        const { categoria, nivel } = data.elementsDB;
+
+        this.datosCategorias.set(categoria);
+
+        this.datosNiveles.set(nivel);
 
         this.message.success('Archivo IFC procesado exitosamente');
         this.isLoading.set(false);

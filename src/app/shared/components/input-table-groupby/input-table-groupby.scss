@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+nz-table {
+  width: 100%;
+
+  th {
+    font-weight: 600;
+  }
+
+  .group-row td {
+    font-weight: 600;
+    background-color: #fafafa;
+  }
+}

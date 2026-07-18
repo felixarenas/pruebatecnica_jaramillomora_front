@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [17/07/2026 22:21:47] Add shared input-table and input-table-groupby components: generic reusable tables rendered from JSON with title, columns/values mapping, and optional groupby field
+- [17/07/2026 22:21:47] Add shared input-grafic-bar component: dependency-free SVG bar/line chart with title, ejesXY, values, summary table of peaks, and fullscreen view (button, close, Escape)
+- [17/07/2026 22:21:47] Add shared input-grafic-circle component: SVG pie/donut chart sharing input-grafic-bar params (without tipo) plus fullscreen view and color-coded summary table
 - [17/07/2026 15:05:31] Add local web-ifc WASM assets under `src/app/shared/web-ifc` (web-ifc.wasm, web-ifc-mt.wasm, package metadata, license)
 - [17/07/2026 00:07:23] Add process-grafic-ifc page to select stored IFC files and call process-property-sets-ifc via Processifc.processGrafic
 - [15/07/2026 20:37:47] Add show-model3d page with That Open IFC viewer, Property Sets JSON extraction, imput-select component, and getFileIfcAll client
@@ -23,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [17/07/2026 22:21:47] Present process-grafic-ifc tables and charts in nz-tabs tabbed layout; add NoopAnimations, HttpClient, NzIcons and Processifc stub to the page unit spec
 - [17/07/2026 15:03:32] Serve web-ifc WASM and fragments worker from node_modules via angular.json; add COOP/COEP headers on ng serve and maxMemoryRender env
 - [17/07/2026 00:07:23] Register process-grafic-ifc route/menu entry and use nom_file as select value in show-model3d
 - [15/07/2026 20:37:47] Extend shared Button with label/icon/loading API and register show-model3d route/menu entry

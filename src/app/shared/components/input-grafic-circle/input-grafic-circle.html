@@ -1,0 +1,79 @@
+<app-card-content-page [cardTitle]="title()" [showHeader]="!!title()" [cardClass]="'card-md'"
+    [headerClass]="'card-header'" [blockClass]="'card-body'" [padding]="16">
+
+    @if (hasData()) {
+    <ng-container [ngTemplateOutlet]="graficContent"></ng-container>
+    } @else {
+    <nz-empty nzNotFoundContent="No hay datos para graficar"></nz-empty>
+    }
+</app-card-content-page>
+
+<!-- Vista en pantalla completa -->
+@if (isFullscreen()) {
+<div class="grafic-fullscreen" role="dialog" aria-modal="true" [attr.aria-label]="title() || 'Gráfico'">
+    <div class="grafic-fullscreen__bar">
+        <span class="grafic-fullscreen__title">{{ title() }}</span>
+        <button nz-button nzType="text" nzShape="circle" (click)="closeFullscreen()" title="Cerrar (Esc)"
+            aria-label="Cerrar pantalla completa">
+            <nz-icon nzType="close" nzTheme="outline"></nz-icon>
+        </button>
+    </div>
+    <div class="grafic-fullscreen__body">
+        <ng-container [ngTemplateOutlet]="graficContent"></ng-container>
+    </div>
+</div>
+}
+
+<!-- Contenido reutilizable del gráfico (vista normal y pantalla completa) -->
+<ng-template #graficContent>
+    <div class="grafic-layout">
+        <div class="grafic-canvas">
+            <button class="grafic-fs-btn" nz-button nzType="text" nzSize="small" (click)="toggleFullscreen()"
+                [title]="isFullscreen() ? 'Salir de pantalla completa' : 'Pantalla completa'"
+                [attr.aria-label]="isFullscreen() ? 'Salir de pantalla completa' : 'Pantalla completa'">
+                <nz-icon [nzType]="isFullscreen() ? 'compress' : 'expand'" nzTheme="outline"></nz-icon>
+            </button>
+
+            <svg [attr.viewBox]="'0 0 ' + view.width + ' ' + view.height" preserveAspectRatio="xMidYMid meet"
+                role="img" [attr.aria-label]="title() || 'Gráfico circular'">
+                @for (slice of slices(); track slice.label) {
+                <path class="slice" [attr.d]="slice.path" [attr.fill]="slice.color">
+                    <title>{{ slice.label }}: {{ slice.value }} ({{ slice.percent }}%)</title>
+                </path>
+                }
+                @for (slice of slices(); track slice.label) {
+                @if (slice.showLabel) {
+                <text class="slice-label" [attr.x]="slice.labelX" [attr.y]="slice.labelY" text-anchor="middle"
+                    dominant-baseline="middle">{{ slice.percent }}%</text>
+                }
+                }
+            </svg>
+        </div>
+
+        <!-- Tabla resumen (picos y valores más pronunciados) -->
+        <aside class="grafic-summary">
+            <h4 class="summary-title">{{ resumen() || 'Resumen' }}</h4>
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>{{ categoryLabel() || 'Elemento' }}</th>
+                        <th class="value-col">{{ valueLabel() || 'Valor' }}</th>
+                        <th class="value-col">%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of summary(); track item.label; let first = $first) {
+                    <tr [class.peak-row]="first">
+                        <td [title]="item.label">
+                            <span class="swatch" [style.background-color]="item.color"></span>
+                            {{ truncate(item.label) }}
+                        </td>
+                        <td class="value-col">{{ item.value }}</td>
+                        <td class="value-col">{{ item.percent }}%</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </aside>
+    </div>
+</ng-template>

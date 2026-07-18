@@ -1,0 +1,26 @@
+<app-card-content-page [cardTitle]="title()" [showHeader]="!!title()" [cardClass]="'card-md'"
+    [headerClass]="'card-header'" [blockClass]="'card-body'" [padding]="16">
+    <nz-table #basicTable [nzData]="data()" nzSize="middle" [nzShowPagination]="data().length > 10"
+        [nzPageSize]="10" nzBordered>
+        <thead>
+            <tr>
+                @for (header of headers(); track header.label) {
+                <th>{{ header.label }}</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (row of basicTable.data; track $index) {
+            <tr>
+                @for (header of headers(); track header.label) {
+                <td>{{ cellValue(row, header.key) }}</td>
+                }
+            </tr>
+            }
+        </tbody>
+    </nz-table>
+
+    @if (!data().length) {
+    <nz-empty nzNotFoundContent="No hay datos para mostrar"></nz-empty>
+    }
+</app-card-content-page>

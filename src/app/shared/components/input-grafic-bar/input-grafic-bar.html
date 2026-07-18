@@ -1,0 +1,114 @@
+<app-card-content-page [cardTitle]="title()" [showHeader]="!!title()" [cardClass]="'card-md'"
+    [headerClass]="'card-header'" [blockClass]="'card-body'" [padding]="16">
+
+    @if (hasData()) {
+    <ng-container [ngTemplateOutlet]="graficContent"></ng-container>
+    } @else {
+    <nz-empty nzNotFoundContent="No hay datos para graficar"></nz-empty>
+    }
+</app-card-content-page>
+
+<!-- Vista en pantalla completa -->
+@if (isFullscreen()) {
+<div class="grafic-fullscreen" role="dialog" aria-modal="true" [attr.aria-label]="title() || 'Gráfico'">
+    <div class="grafic-fullscreen__bar">
+        <span class="grafic-fullscreen__title">{{ title() }}</span>
+        <button nz-button nzType="text" nzShape="circle" (click)="closeFullscreen()" title="Cerrar (Esc)"
+            aria-label="Cerrar pantalla completa">
+            <nz-icon nzType="close" nzTheme="outline"></nz-icon>
+        </button>
+    </div>
+    <div class="grafic-fullscreen__body">
+        <ng-container [ngTemplateOutlet]="graficContent"></ng-container>
+    </div>
+</div>
+}
+
+<!-- Contenido reutilizable del gráfico (vista normal y pantalla completa) -->
+<ng-template #graficContent>
+    <div class="grafic-layout">
+        <div class="grafic-canvas">
+            <button class="grafic-fs-btn" nz-button nzType="text" nzSize="small" (click)="toggleFullscreen()"
+                [title]="isFullscreen() ? 'Salir de pantalla completa' : 'Pantalla completa'"
+                [attr.aria-label]="isFullscreen() ? 'Salir de pantalla completa' : 'Pantalla completa'">
+                <nz-icon [nzType]="isFullscreen() ? 'compress' : 'expand'" nzTheme="outline"></nz-icon>
+            </button>
+
+            <svg [attr.viewBox]="'0 0 ' + view.width + ' ' + view.height" preserveAspectRatio="xMidYMid meet"
+                role="img" [attr.aria-label]="title() || 'Gráfico'">
+
+                <!-- Marcas y líneas de guía del eje Y -->
+                @for (tick of chart().ticks; track tick.value) {
+                <line class="grid-line" [attr.x1]="chart().axisX" [attr.y1]="tick.y" [attr.x2]="chart().plotRight"
+                    [attr.y2]="tick.y"></line>
+                <text class="tick-label" [attr.x]="chart().axisX - 8" [attr.y]="tick.y + 4" text-anchor="end">
+                    {{ tick.value }}
+                </text>
+                }
+
+                <!-- Ejes -->
+                <line class="axis-line" [attr.x1]="chart().axisX" [attr.y1]="chart().axisTopY" [attr.x2]="chart().axisX"
+                    [attr.y2]="chart().baselineY"></line>
+                <line class="axis-line" [attr.x1]="chart().axisX" [attr.y1]="chart().baselineY"
+                    [attr.x2]="chart().plotRight" [attr.y2]="chart().baselineY"></line>
+
+                <!-- Barras -->
+                @if (tipo() === 'barras') {
+                @for (bar of chart().bars; track bar.label) {
+                <rect class="bar" [attr.x]="bar.x" [attr.y]="bar.y" [attr.width]="bar.width"
+                    [attr.height]="bar.height"></rect>
+                <text class="value-label" [attr.x]="bar.cx" [attr.y]="bar.y - 6" text-anchor="middle">
+                    {{ bar.value }}
+                </text>
+                }
+                }
+
+                <!-- Líneas consecutivas -->
+                @if (tipo() === 'lineas') {
+                <path class="line-path" [attr.d]="chart().linePath"></path>
+                @for (node of chart().nodes; track node.label) {
+                <circle class="line-node" [attr.cx]="node.x" [attr.cy]="node.y" r="3.5"></circle>
+                <text class="value-label" [attr.x]="node.x" [attr.y]="node.y - 8" text-anchor="middle">
+                    {{ node.value }}
+                </text>
+                }
+                }
+
+                <!-- Etiquetas del eje X -->
+                @for (node of chart().nodes; track node.label) {
+                <text class="x-label" [attr.x]="node.x" [attr.y]="chart().baselineY + 16" text-anchor="end"
+                    [attr.transform]="'rotate(-35 ' + node.x + ' ' + (chart().baselineY + 16) + ')'">
+                    {{ truncate(node.label) }}
+                </text>
+                }
+
+                <!-- Nombre de los ejes -->
+                <text class="axis-title" [attr.x]="(chart().axisX + chart().plotRight) / 2"
+                    [attr.y]="view.height - 6" text-anchor="middle">{{ xAxisLabel() }}</text>
+                <text class="axis-title" [attr.transform]="'rotate(-90 14 ' + view.height / 2 + ')'" [attr.x]="14"
+                    [attr.y]="view.height / 2" text-anchor="middle">{{ yAxisLabel() }}</text>
+            </svg>
+        </div>
+
+        <!-- Tabla resumen (picos y valores más pronunciados) -->
+        <aside class="grafic-summary">
+            <h4 class="summary-title">{{ resumen() || 'Resumen' }}</h4>
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>{{ xAxisLabel() || 'Elemento' }}</th>
+                        <th class="value-col">{{ yAxisLabel() || 'Valor' }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of summary(); track item.label; let first = $first) {
+                    <tr [class.peak-row]="first">
+                        <td [title]="item.label">{{ truncate(item.label, 24) }}</td>
+                        <td class="value-col">{{ item.value }}</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </aside>
+    </div>
+</ng-template>

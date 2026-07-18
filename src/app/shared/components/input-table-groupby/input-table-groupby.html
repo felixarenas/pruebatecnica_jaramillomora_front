@@ -1,0 +1,32 @@
+<app-card-content-page [cardTitle]="title()" [showHeader]="!!title()" [cardClass]="'card-md'"
+    [headerClass]="'card-header'" [blockClass]="'card-body'" [padding]="16">
+    <nz-table #basicTable [nzData]="data()" nzSize="middle" [nzShowPagination]="false" nzBordered>
+        <thead>
+            <tr>
+                @for (header of headers(); track header.label) {
+                <th>{{ header.label }}</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (group of groups(); track group.label) {
+            @if (group.label) {
+            <tr class="group-row">
+                <td [attr.colspan]="columnCount()">{{ group.label }}</td>
+            </tr>
+            }
+            @for (row of group.rows; track $index) {
+            <tr>
+                @for (header of headers(); track header.label) {
+                <td>{{ cellValue(row, header.key) }}</td>
+                }
+            </tr>
+            }
+            }
+        </tbody>
+    </nz-table>
+
+    @if (!data().length) {
+    <nz-empty nzNotFoundContent="No hay datos para mostrar"></nz-empty>
+    }
+</app-card-content-page>

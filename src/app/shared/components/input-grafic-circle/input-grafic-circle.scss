@@ -1,0 +1,166 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.grafic-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.grafic-canvas {
+  position: relative;
+  flex: 1 1 320px;
+  min-width: 0;
+
+  svg {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.grafic-fs-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  color: rgba(0, 0, 0, 0.55);
+
+  &:hover {
+    color: #1677ff;
+  }
+}
+
+// --- Torta ---
+.slice {
+  stroke: #ffffff;
+  stroke-width: 1.5;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.slice-label {
+  font-size: 12px;
+  font-weight: 600;
+  fill: #ffffff;
+  pointer-events: none;
+}
+
+// --- Tabla resumen ---
+.grafic-summary {
+  flex: 0 1 280px;
+  min-width: 220px;
+  align-self: flex-start;
+}
+
+.summary-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th,
+  td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  th {
+    font-weight: 600;
+    background-color: #fafafa;
+  }
+
+  .value-col {
+    text-align: right;
+  }
+
+  .peak-row {
+    font-weight: 600;
+  }
+
+  .swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 6px;
+    border-radius: 2px;
+    vertical-align: middle;
+  }
+}
+
+// --- Pantalla completa ---
+.grafic-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+}
+
+.grafic-fullscreen__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid #f0f0f0;
+
+  .grafic-fullscreen__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.85);
+  }
+}
+
+.grafic-fullscreen__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 20px;
+  overflow: auto;
+
+  .grafic-layout {
+    height: 100%;
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+
+  .grafic-canvas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      max-height: calc(100vh - 120px);
+    }
+  }
+
+  .grafic-summary {
+    flex: 0 0 300px;
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .grafic-fullscreen__body .grafic-layout {
+    flex-wrap: wrap;
+  }
+}
