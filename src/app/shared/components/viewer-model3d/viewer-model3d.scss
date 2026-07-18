@@ -43,6 +43,27 @@
     }
   }
 
+  &__progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    width: 100%;
+    height: 4px;
+    background: rgba($symphony-border, 0.5);
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  &__progress-bar {
+    height: 100%;
+    width: 0;
+    background: $symphony-orange;
+    border-radius: 0 2px 2px 0;
+    transition: width 0.2s ease;
+  }
+
   &__overlay {
     position: absolute;
     inset: 0;

@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [17/07/2026 23:47:06] Add IFC 3D model load progress bar to viewer-model3d: `loadingProgress` signal fed by web-ifc `progressCallback`, rendered as an overlay bar on top of the model canvas (full stage width, shown only when progress is not null)
+
 - [17/07/2026 22:21:47] Add shared input-table and input-table-groupby components: generic reusable tables rendered from JSON with title, columns/values mapping, and optional groupby field
 - [17/07/2026 22:21:47] Add shared input-grafic-bar component: dependency-free SVG bar/line chart with title, ejesXY, values, summary table of peaks, and fullscreen view (button, close, Escape)
 - [17/07/2026 22:21:47] Add shared input-grafic-circle component: SVG pie/donut chart sharing input-grafic-bar params (without tipo) plus fullscreen view and color-coded summary table

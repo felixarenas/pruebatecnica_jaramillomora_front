@@ -139,6 +139,8 @@ export class ViewerModel3d implements OnDestroy {
   /** Último resultado de {@link apiGetPropertySets}. */
   readonly propertySetsData = signal<IfcNonGraphicalExport | null>(null);
 
+  readonly loadingProgress = signal<number | null>(null);
+
   private components: OBC.Components | null = null;
   private world: ViewerWorld | null = null;
   private fragments: OBC.FragmentsManager | null = null;
@@ -649,6 +651,7 @@ export class ViewerModel3d implements OnDestroy {
 
     this.setLoading(true);
     this.errorMessage.set(null);
+    this.loadingProgress.set(null);
 
     try {
       const response = await fetch(url);
@@ -678,7 +681,19 @@ export class ViewerModel3d implements OnDestroy {
       }
 
       const name = this.fileNameFromUrl(url);
-      await this.ifcLoader.load(buffer, true, name);
+      await this.ifcLoader.load(buffer, true, name, {
+        processData: {
+          // Callback de progreso
+          progressCallback: (progress: number) => {
+            // El progreso viene en decimal (0.0 a 1.0)
+            const progressPercent = Math.round(progress * 100);
+            this.loadingProgress.set(progressPercent);
+            //this.loadingProgressSubject.next(progressPercent); //------------------------------>>>>>>>>>>>>>>><
+
+            console.log(`📊 Progreso: ${progressPercent}%`);
+          },
+        }
+      });
 
       if (seq !== this.loadSeq) {
         return;

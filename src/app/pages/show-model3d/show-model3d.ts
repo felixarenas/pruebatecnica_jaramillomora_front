@@ -94,7 +94,7 @@ export class ShowModel3d implements OnInit {
 
         const jsonString = JSON.stringify(data, null, 2);
         //this.propertySetsJson.set(jsonString);
-        console.log(jsonString);
+        //console.log(jsonString);
         this.message.success('Property Sets extraídos correctamente');
         this.isLoading.set(false);
       })
