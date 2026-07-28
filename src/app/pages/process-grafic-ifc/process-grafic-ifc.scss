@@ -1,0 +1,6 @@
+.tabs-container {
+  margin-top: 3px; // ⬅️ SOLUCIÓN MÁS LIMPIA
+  
+  // O si necesitas que sea exacto y no colapse con márgenes adyacentes
+  padding-top: 3px;
+}

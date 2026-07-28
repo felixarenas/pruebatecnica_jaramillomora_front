@@ -13,6 +13,8 @@ import { InputTable } from '../../shared/components/input-table/input-table';
 import { InputTableGroupby } from '../../shared/components/input-table-groupby/input-table-groupby';
 import { InputGraficBar } from '../../shared/components/input-grafic-bar/input-grafic-bar';
 import { InputGraficCircle } from '../../shared/components/input-grafic-circle/input-grafic-circle';
+import { io, Socket } from 'socket.io-client';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-process-grafic-ifc',
@@ -25,9 +27,13 @@ export class ProcessGraficIfc {
   private readonly fb = inject(FormBuilder);
   private readonly message = inject(NzMessageService);
   private readonly loading = inject(LoadingService);
+  private socket: Socket;
 
   readonly tiposOptions = signal<SelectOption[]>([]);
   readonly isLoading = this.loading.isLoading;
+  readonly isCargaCompleta = this.loading.isCargaCompleta;
+  readonly isCargaCompletaString = this.loading.isCargaCompletaString;
+  readonly isCargaMensaje = this.loading.isCargaMensaje;
   readonly error = signal<string | null>(null);
   readonly success = signal<boolean>(false);
   readonly datosCategorias = signal<any>(null);
@@ -36,6 +42,14 @@ export class ProcessGraficIfc {
   readonly form = this.fb.nonNullable.group({
     id_archivo_ifc: this.fb.control<string | null>(null),
   });
+
+  constructor() {
+    this.socket = io(environment.urlSocket);
+    this.socket.on('progress-update', (data: { percentage: string, message: string }) => {
+      this.isCargaCompletaString.set(data.percentage);
+      this.isCargaMensaje.set(data.message || '');
+    });
+  }
 
   ngOnInit(): void {
 
@@ -67,6 +81,7 @@ export class ProcessGraficIfc {
     this.error.set(null);
     this.success.set(false);
     this.isLoading.set(true);
+    this.isCargaCompleta.set(true);
     this.datosCategorias.set(null);
     this.datosNiveles.set(null);
 
@@ -74,6 +89,8 @@ export class ProcessGraficIfc {
     if (!idArchivoIfc) {
       this.message.error('Por favor, seleccione un archivo IFC');
       this.isLoading.set(false);
+      this.isCargaCompleta.set(false);
+      this.isCargaCompletaString.set('0%');
       return;
     }
 
@@ -82,6 +99,8 @@ export class ProcessGraficIfc {
         if (!res.status || !res.datos) {
           this.message.error('No se pudo procesar el archivo IFC');
           this.isLoading.set(false);
+          this.isCargaCompleta.set(false);
+          this.isCargaCompletaString.set('0%');
           return;
         }
 
@@ -90,6 +109,8 @@ export class ProcessGraficIfc {
         if (!status) {
           this.message.error(mensaje);
           this.isLoading.set(false);
+          this.isCargaCompleta.set(false);
+          this.isCargaCompletaString.set('0%');
           return;
         }
 
@@ -101,10 +122,14 @@ export class ProcessGraficIfc {
 
         this.message.success('Archivo IFC procesado exitosamente');
         this.isLoading.set(false);
+        this.isCargaCompleta.set(false);
+        this.isCargaCompletaString.set('0%');
       },
       error: () => {
         this.message.error('No se pudo procesar el archivo IFC');
         this.isLoading.set(false);
+        this.isCargaCompleta.set(false);
+        this.isCargaCompletaString.set('0%');
       },
     });
   }

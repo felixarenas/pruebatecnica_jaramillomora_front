@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [17/07/2026 15:03:32] Fix IFC 3D viewer load: local web-ifc WASM/fragments worker, single-thread Init, MEMORY_LIMIT from env (uint32-safe), validate IFC bytes, and use storage URL (not nom_file) in show-model3d
 
 ### Added
+- [28/07/2026 15:48:00] Connect process-grafic-ifc to backend Socket.IO progress (`urlSocket` + `socket.io-client`) and show percentage/message on the loading overlay
+
+- [28/07/2026 15:48:00] Extend input-table-groupby with per-group collapse and pagination (`pageSize`, `groupsCollapsedByDefault`)
+
 
 - [17/07/2026 23:47:06] Add IFC 3D model load progress bar to viewer-model3d: `loadingProgress` signal fed by web-ifc `progressCallback`, rendered as an overlay bar on top of the model canvas (full stage width, shown only when progress is not null)
 
@@ -27,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [14/07/2026 21:02:28] Agent/developer context (AGENTS.md, README.md) and project skills under .agents/
 
 ### Changed
+- [28/07/2026 15:48:00] Drive loading progress signals (`isCargaCompleta`, percentage, message) from LoadingService during IFC graphic processing
+
 
 - [17/07/2026 22:21:47] Present process-grafic-ifc tables and charts in nz-tabs tabbed layout; add NoopAnimations, HttpClient, NzIcons and Processifc stub to the page unit spec
 - [17/07/2026 15:03:32] Serve web-ifc WASM and fragments worker from node_modules via angular.json; add COOP/COEP headers on ng serve and maxMemoryRender env

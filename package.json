@@ -42,6 +42,7 @@
     "ng-zorro-antd": "^21.0.0-next.1",
     "ngx-scrollbar": "^19.1.0",
     "rxjs": "~7.8.0",
+    "socket.io-client": "^4.8.3",
     "three": "^0.184.0",
     "tslib": "^2.3.0",
     "web-ifc": "^0.0.77"

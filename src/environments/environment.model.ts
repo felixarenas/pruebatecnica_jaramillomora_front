@@ -4,4 +4,5 @@ export interface Environment {
   apiUrl: string;
   /** Límite de memoria del visor IFC en GiB (web-ifc MEMORY_LIMIT; máx. efectivo < 4). */
   maxMemoryRender: number;
+  urlSocket: string;
 }

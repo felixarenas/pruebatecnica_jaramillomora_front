@@ -9,18 +9,49 @@
             </tr>
         </thead>
         <tbody>
-            @for (group of groups(); track group.label) {
+            @for (group of groups(); track groupKey(group)) {
             @if (group.label) {
             <tr class="group-row">
-                <td [attr.colspan]="columnCount()">{{ group.label }}</td>
+                <td [attr.colspan]="columnCount()">
+                    <div class="group-row-header">
+                        <span class="group-row-title">{{ group.label }}</span>
+                        <button
+                            type="button"
+                            class="group-toggle-btn"
+                            [attr.aria-label]="collapseButtonLabel(group)"
+                            [attr.aria-expanded]="!isGroupCollapsed(group)"
+                            (click)="toggleGroupCollapse(group)"
+                        >
+                            <nz-icon [nzType]="isGroupCollapsed(group) ? 'down' : 'up'" />
+                        </button>
+                    </div>
+                </td>
             </tr>
             }
-            @for (row of group.rows; track $index) {
+
+            @if (!isGroupCollapsed(group)) {
+            @for (row of paginatedRows(group); track $index) {
             <tr>
                 @for (header of headers(); track header.label) {
                 <td>{{ cellValue(row, header.key) }}</td>
                 }
             </tr>
+            }
+
+            @if (needsPagination(group)) {
+            <tr class="group-pagination-row">
+                <td [attr.colspan]="columnCount()">
+                    <nz-pagination
+                        nzSize="small"
+                        [nzPageIndex]="getGroupPage(group)"
+                        [nzTotal]="group.rows.length"
+                        [nzPageSize]="pageSize()"
+                        [nzShowSizeChanger]="false"
+                        (nzPageIndexChange)="setGroupPage(group, $event)"
+                    />
+                </td>
+            </tr>
+            }
             }
             }
         </tbody>

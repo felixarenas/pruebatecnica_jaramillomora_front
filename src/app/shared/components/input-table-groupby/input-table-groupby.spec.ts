@@ -8,9 +8,8 @@ describe('InputTableGroupby', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InputTableGroupby]
-    })
-    .compileComponents();
+      imports: [InputTableGroupby],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(InputTableGroupby);
     component = fixture.componentInstance;
@@ -51,5 +50,107 @@ describe('InputTableGroupby', () => {
     expect(groups.length).toBe(1);
     expect(groups[0].label).toBe('');
     expect(groups[0].rows.length).toBe(1);
+  });
+
+  it('oculta las filas al cargar cuando groupsCollapsedByDefault es true', () => {
+    fixture.componentRef.setInput('data', [
+      { nombre_nivel: 'Nivel 1', nombre_elemento: 'A', cuantos: 1 },
+      { nombre_nivel: 'Nivel 1', nombre_elemento: 'B', cuantos: 2 },
+    ]);
+    fixture.componentRef.setInput('groupby', ['nombre_nivel']);
+    fixture.componentRef.setInput('groupsCollapsedByDefault', true);
+    fixture.detectChanges();
+
+    const cmp = component as unknown as {
+      groups: () => { label: string; rows: unknown[] }[];
+      paginatedRows: (group: { label: string; rows: unknown[] }) => unknown[];
+      isGroupCollapsed: (group: { label: string; rows: unknown[] }) => boolean;
+    };
+    const group = cmp.groups()[0];
+
+    expect(cmp.isGroupCollapsed(group)).toBe(true);
+    expect(cmp.paginatedRows(group).length).toBe(0);
+  });
+
+  it('muestra las filas al cargar cuando groupsCollapsedByDefault es false', () => {
+    fixture.componentRef.setInput('data', [
+      { nombre_nivel: 'Nivel 1', nombre_elemento: 'A', cuantos: 1 },
+      { nombre_nivel: 'Nivel 1', nombre_elemento: 'B', cuantos: 2 },
+    ]);
+    fixture.componentRef.setInput('groupby', ['nombre_nivel']);
+    fixture.componentRef.setInput('groupsCollapsedByDefault', false);
+    fixture.detectChanges();
+
+    const cmp = component as unknown as {
+      groups: () => { label: string; rows: unknown[] }[];
+      paginatedRows: (group: { label: string; rows: unknown[] }) => unknown[];
+      isGroupCollapsed: (group: { label: string; rows: unknown[] }) => boolean;
+    };
+    const group = cmp.groups()[0];
+
+    expect(cmp.isGroupCollapsed(group)).toBe(false);
+    expect(cmp.paginatedRows(group).length).toBe(2);
+  });
+
+  it('pagina las filas de cada grupo según pageSize', () => {
+    fixture.componentRef.setInput('data', [
+      { nombre_nivel: 'Nivel 1', nombre_elemento: 'A', cuantos: 1 },
+      { nombre_nivel: 'Nivel 1', nombre_elemento: 'B', cuantos: 2 },
+      { nombre_nivel: 'Nivel 1', nombre_elemento: 'C', cuantos: 3 },
+      { nombre_nivel: 'Nivel 1', nombre_elemento: 'D', cuantos: 4 },
+    ]);
+    fixture.componentRef.setInput('columns', ['nombre', 'cantidad']);
+    fixture.componentRef.setInput('values', ['nombre_elemento', 'cuantos']);
+    fixture.componentRef.setInput('groupby', ['nombre_nivel']);
+    fixture.componentRef.setInput('pageSize', 2);
+    fixture.componentRef.setInput('groupsCollapsedByDefault', false);
+    fixture.detectChanges();
+
+    const cmp = component as unknown as {
+      groups: () => { label: string; rows: unknown[] }[];
+      paginatedRows: (group: { label: string; rows: unknown[] }) => unknown[];
+      setGroupPage: (group: { label: string; rows: unknown[] }, page: number) => void;
+    };
+    const group = cmp.groups()[0];
+
+    expect(cmp.paginatedRows(group).length).toBe(2);
+
+    cmp.setGroupPage(group, 2);
+    fixture.detectChanges();
+
+    expect(cmp.paginatedRows(group).length).toBe(2);
+    expect((cmp.paginatedRows(group)[0] as { nombre_elemento: string }).nombre_elemento).toBe('C');
+  });
+
+  it('expande las filas del grupo al pulsar el botón de toggle', () => {
+    fixture.componentRef.setInput('data', [
+      { nombre_nivel: 'Nivel 1', nombre_elemento: 'A', cuantos: 1 },
+      { nombre_nivel: 'Nivel 1', nombre_elemento: 'B', cuantos: 2 },
+    ]);
+    fixture.componentRef.setInput('groupby', ['nombre_nivel']);
+    fixture.componentRef.setInput('groupsCollapsedByDefault', true);
+    fixture.detectChanges();
+
+    const cmp = component as unknown as {
+      groups: () => { label: string; rows: unknown[] }[];
+      toggleGroupCollapse: (group: { label: string; rows: unknown[] }) => void;
+      paginatedRows: (group: { label: string; rows: unknown[] }) => unknown[];
+      isGroupCollapsed: (group: { label: string; rows: unknown[] }) => boolean;
+    };
+    const group = cmp.groups()[0];
+
+    expect(cmp.paginatedRows(group).length).toBe(0);
+
+    cmp.toggleGroupCollapse(group);
+    fixture.detectChanges();
+
+    expect(cmp.isGroupCollapsed(group)).toBe(false);
+    expect(cmp.paginatedRows(group).length).toBe(2);
+
+    cmp.toggleGroupCollapse(group);
+    fixture.detectChanges();
+
+    expect(cmp.isGroupCollapsed(group)).toBe(true);
+    expect(cmp.paginatedRows(group).length).toBe(0);
   });
 });

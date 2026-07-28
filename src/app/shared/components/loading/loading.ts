@@ -12,4 +12,10 @@ export class Loading {
   private readonly loadingService = inject(LoadingService);
 
   readonly isLoading = this.loadingService.isLoading;
+
+  readonly isCargaCompleta = this.loadingService.isCargaCompleta;
+
+  readonly isCargaCompletaString = this.loadingService.isCargaCompletaString;
+
+  readonly isCargaMensaje = this.loadingService.isCargaMensaje;
 }

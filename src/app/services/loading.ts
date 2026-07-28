@@ -7,4 +7,10 @@ import { Injectable, signal } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class LoadingService {
   readonly isLoading = signal(false);
+  /** Activa la barra de progreso dentro del overlay de carga. */
+  readonly isCargaCompleta = signal(false);
+  /** Porcentaje visual de la barra (ej. `45%`). Actualizar mientras avanza la carga. */
+  readonly isCargaCompletaString = signal('0%');
+  /** Mensaje descriptivo del estado de carga. */
+  readonly isCargaMensaje = signal('');
 }

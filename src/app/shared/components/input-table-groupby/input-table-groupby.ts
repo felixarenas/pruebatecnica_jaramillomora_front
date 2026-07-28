@@ -1,7 +1,17 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  input,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 import { Card } from '../card/card';
 
 /**
@@ -32,11 +42,21 @@ interface TableGroup {
  *   [data]="datos"
  *   [columns]="['nombre', 'cantidad']"
  *   [values]="['nombre_elemento', 'cuantos']"
- *   [groupby]="['nombre_nivel']" />
+ *   [groupby]="['nombre_nivel']"
+ *   [pageSize]="15"
+ *   [groupsCollapsedByDefault]="true" />
  */
 @Component({
   selector: 'app-input-table-groupby',
-  imports: [CommonModule, NzTableModule, NzEmptyModule, Card],
+  imports: [
+    CommonModule,
+    NzTableModule,
+    NzEmptyModule,
+    NzPaginationModule,
+    NzIconModule,
+    NzButtonModule,
+    Card,
+  ],
   templateUrl: './input-table-groupby.html',
   styleUrl: './input-table-groupby.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,6 +82,27 @@ export class InputTableGroupby {
    * combinación genera un grupo con su propia fila de encabezado.
    */
   groupby = input<string[]>([]);
+
+  /** Cantidad de filas visibles por página dentro de cada grupo. */
+  pageSize = input<number>(10);
+
+  /**
+   * Si es `true`, al cargar (o al cambiar `data`) los grupos muestran solo el
+   * encabezado y las filas quedan ocultas hasta expandir con el botón.
+   */
+  groupsCollapsedByDefault = input<boolean>(true);
+
+  /** Estado explícito de expansión por grupo (tras interacción del usuario). */
+  private readonly groupExpansionState = signal<Record<string, boolean>>({});
+  private readonly groupPageIndexes = signal<Record<string, number>>({});
+
+  constructor() {
+    effect(() => {
+      this.data();
+      this.groupExpansionState.set({});
+      this.groupPageIndexes.set({});
+    });
+  }
 
   /** Emparejamiento posición a posición entre encabezado y clave del JSON. */
   protected readonly headers = computed(() =>
@@ -100,6 +141,77 @@ export class InputTableGroupby {
     }
     return [...grouped.values()];
   });
+
+  /** Clave interna para estado de UI (colapso / paginación) de un grupo. */
+  protected groupKey(group: TableGroup): string {
+    return group.label || '__default__';
+  }
+
+  protected isGroupExpanded(group: TableGroup): boolean {
+    if (!group.label) {
+      return true;
+    }
+
+    const key = this.groupKey(group);
+    const explicit = this.groupExpansionState()[key];
+
+    if (explicit !== undefined) {
+      return explicit;
+    }
+
+    return !this.groupsCollapsedByDefault();
+  }
+
+  protected isGroupCollapsed(group: TableGroup): boolean {
+    return !this.isGroupExpanded(group);
+  }
+
+  protected toggleGroupCollapse(group: TableGroup): void {
+    const key = this.groupKey(group);
+    const expanded = this.isGroupExpanded(group);
+
+    this.groupExpansionState.update((current) => ({
+      ...current,
+      [key]: !expanded,
+    }));
+  }
+
+  protected getGroupPage(group: TableGroup): number {
+    return this.groupPageIndexes()[this.groupKey(group)] ?? 1;
+  }
+
+  protected setGroupPage(group: TableGroup, page: number): void {
+    const key = this.groupKey(group);
+    this.groupPageIndexes.update((current) => ({ ...current, [key]: page }));
+  }
+
+  protected paginatedRows(group: TableGroup): InputTableGroupbyRow[] {
+    if (group.label && this.isGroupCollapsed(group)) {
+      return [];
+    }
+
+    const size = this.pageSize();
+    if (!size || size <= 0) {
+      return group.rows;
+    }
+
+    const totalPages = Math.max(1, Math.ceil(group.rows.length / size));
+    const page = Math.min(this.getGroupPage(group), totalPages);
+    const start = (page - 1) * size;
+
+    return group.rows.slice(start, start + size);
+  }
+
+  protected needsPagination(group: TableGroup): boolean {
+    const size = this.pageSize();
+    return size > 0 && group.rows.length > size;
+  }
+
+  protected collapseButtonLabel(group: TableGroup): string {
+    return this.isGroupCollapsed(group)
+      ? 'Expandir filas del grupo'
+      : 'Contraer filas del grupo';
+  }
 
   /** Obtiene el valor de una celda de forma segura. */
   protected cellValue(row: InputTableGroupbyRow, key: string): unknown {

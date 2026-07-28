@@ -11,7 +11,52 @@ nz-table {
   }
 
   .group-row td {
-    font-weight: 600;
+    padding: 0;
     background-color: #fafafa;
+  }
+
+  .group-row-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px;
+  }
+
+  .group-row-title {
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .group-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    background: #fff;
+    color: #595959;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color 0.2s ease, color 0.2s ease;
+
+    &:hover {
+      border-color: #f07830;
+      color: #f07830;
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(240, 120, 48, 0.45);
+      outline-offset: 2px;
+    }
+  }
+
+  .group-pagination-row td {
+    padding: 8px 12px;
+    background-color: #fff;
   }
 }

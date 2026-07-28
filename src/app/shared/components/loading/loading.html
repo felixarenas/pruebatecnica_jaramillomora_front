@@ -7,6 +7,26 @@
     aria-label="Cargando"
   >
     <div class="loading-center">
+      @if (isCargaCompleta()) {
+        <div
+          class="loading-progress"
+          role="progressbar"
+          [attr.aria-valuenow]="isCargaCompletaString()"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          <div class="loading-progress-bar">
+            <div
+              class="loading-progress-bar-fill"
+              [style.width]="isCargaCompletaString()"
+            ></div>
+          </div>
+          <span class="loading-progress-label">{{ isCargaCompletaString() }}</span>
+        </div>
+        @if (isCargaMensaje()) {
+          <p class="loading-message">{{ isCargaMensaje() }}</p>
+        }
+      }
       <div class="loading-spinner" aria-hidden="true"></div>
       <span class="loading-text">Cargando…</span>
     </div>
